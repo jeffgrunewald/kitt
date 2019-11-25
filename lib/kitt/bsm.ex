@@ -101,5 +101,7 @@ defmodule Kitt.BSM do
               size: nil
   end
 
+  def new(message), do: struct(__MODULE__, message)
+
   def type_id(), do: :DSRC.basicSafetyMessage()
 end

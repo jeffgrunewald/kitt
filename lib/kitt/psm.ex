@@ -91,7 +91,9 @@ defmodule Kitt.PSM do
             sizing: nil,
             speed: nil,
             useState: nil,
-    useState: nil
+            useState: nil
+
+  def new(message), do: struct(__MODULE__, message)
 
   def type_id(), do: :DSRC.personalSafetyMessage()
 end
