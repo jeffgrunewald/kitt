@@ -100,4 +100,6 @@ defmodule Kitt.BSM do
               brakes: nil,
               size: nil
   end
+
+  def type_id(), do: :DSRC.basicSafetyMessage()
 end
