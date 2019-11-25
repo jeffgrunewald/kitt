@@ -58,7 +58,7 @@ defmodule Kitt.PSM do
                | :bicycle
                | :scooter
                | :selfBalancingDevice},
-          regional: [map()],
+          regional: [Kitt.Types.regional_extension()],
           secMark: non_neg_integer(),
           sizing: bitstring(),
           speed: non_neg_integer(),

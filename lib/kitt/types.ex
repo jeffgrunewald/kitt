@@ -131,25 +131,31 @@ defmodule Kitt.Types do
           description: [non_neg_integer()],
           priority: binary(),
           heading: bitstring(),
-          extent:
-            :useInstantlyOnly
-            | :useFor3meters
-            | :useFor10meters
-            | :useFor50meters
-            | :useFor100meters
-            | :useFor500meters
-            | :useFor1000meters
-            | :useFor5000meters
-            | :useFor10000meters
-            | :useFor50000meters
-            | :useFor100000meters
-            | :useFor500000meters
-            | :useFor1000000meters
-            | :useFor5000000meters
-            | :useFor10000000meters
-            | :forever,
+          extent: extent(),
           regional: [map()]
         }
+
+  @type regional_extension :: map()
+
+  @type minute_of_year :: non_neg_integer()
+
+  @type extent ::
+          :useInstantlyOnly
+          | :useFor3meters
+          | :useFor10meters
+          | :useFor50meters
+          | :useFor100meters
+          | :useFor500meters
+          | :useFor1000meters
+          | :useFor5000meters
+          | :useFor10000meters
+          | :useFor50000meters
+          | :useFor100000meters
+          | :useFor500000meters
+          | :useFor1000000meters
+          | :useFor5000000meters
+          | :useFor10000000meters
+          | :forever
 
   @type pivot_point_description :: %{
           pivotOffset: integer(),
@@ -696,4 +702,228 @@ defmodule Kitt.Types do
           | :northeast
           | :southwest
           | :southeast
+
+  @type intersection_reference_id :: %{
+          region: non_neg_integer(),
+          id: non_neg_integer()
+        }
+
+  @type vehicle_id :: %{
+          entityID: binary(),
+          stationID: non_neg_integer()
+        }
+
+  @type requestor_type :: %{
+          role: basic_vehicle_role(),
+          subrole:
+            :requestSubRoleUnknown
+            | :requestSubRole1
+            | :requestSubRole2
+            | :requestSubRole3
+            | :requestSubRole4
+            | :requestSubRole5
+            | :requestSubRole6
+            | :requestSubRole7
+            | :requestSubRole8
+            | :requestSubRole9
+            | :requestSubRole10
+            | :requestSubRole11
+            | :requestSubRole12
+            | :requestSubRole13
+            | :requestSubRole14
+            | :requestSubRoleReserved,
+          request:
+            :requestImportanceLevelUnknown
+            | :requestImportanceLevel1
+            | :requestImportanceLevel2
+            | :requestImportanceLevel3
+            | :requestImportanceLevel4
+            | :requestImportanceLevel5
+            | :requestImportanceLevel6
+            | :requestImportanceLevel7
+            | :requestImportanceLevel8
+            | :requestImportanceLevel9
+            | :requestImportanceLevel10
+            | :requestImportanceLevel11
+            | :requestImportanceLevel12
+            | :requestImportanceLevel13
+            | :requestImportanceLevel14
+            | :requestImportanceReserved,
+          iso3883: non_neg_integer(),
+          hpmsType: vehicle_type(),
+          regional: [map()]
+        }
+
+  @type intersection_access_point :: %{
+          lane: non_neg_integer(),
+          approach: non_neg_integer(),
+          connection: non_neg_integer()
+        }
+
+  @type speed_limit_type ::
+          :unknown
+          | :maxSpeedInSchoolZone
+          | :maxSpeedInSchoolZoneWhenChildrenArePresent
+          | :maxSpeedInConstructionZone
+          | :vehicleMinSpeed
+          | :vehicleMaxSpeed
+          | :vehicleNightMaxSpeed
+          | :truckMinSpeed
+          | :truckMaxSpeed
+          | :truckNightMaxSpeed
+          | :vehicleWithTrailersMinSpeed
+          | :vehicleWithTrailersMaxSpeed
+          | :vehicleWithTrailersNightMaxSpeed
+
+  @type regulatory_speed_limit :: %{
+          type: speed_limit_type(),
+          speed: non_neg_integer()
+        }
+
+  @type offset_system :: %{
+          scale: non_neg_integer(),
+          offset: offset()
+        }
+
+  @type offset ::
+          {:xy, node_list_xy()}
+          | {:ll, node_list_ll()}
+
+  @type node_list_ll :: {:nodes, [node_ll()]}
+
+  @type node_ll :: %{
+          delta: node_offset_point_ll(),
+          attributes: node_attribute_set()
+        }
+
+  @type node_list_xy ::
+          {:nodes, [node_xy()]}
+          | {:computed, computed_lane()}
+
+  @type computed_lane :: %{
+          referenceLaneId: non_neg_integer(),
+          offsetXaxis: driven_lane_offset(),
+          offsetYaxis: driven_lane_offset(),
+          rotateXY: non_neg_integer(),
+          scaleXaxis: integer(),
+          scaleYaxis: integer(),
+          regional: [map()]
+        }
+
+  @type driven_lane_offset ::
+          {:small, integer()}
+          | {:large, integer()}
+
+  @type node_xy :: %{
+          delta: node_offset_point_xy(),
+          attributes: node_attribute_set()
+        }
+
+  @type node_offset_point_ll ::
+          {:"node-LL1"}
+          | {:"node-LL2", node_ll_b()}
+          | {:"node-LL3", node_ll_b()}
+          | {:"node-LL4", node_ll_b()}
+          | {:"node-LL5", node_ll_b()}
+          | {:"node-LL6", node_ll_b()}
+          | {:nodeLatLon, node_llmd_64b()}
+          | {:regional, [map()]}
+
+  @type node_offset_point_xy ::
+          {:"node-XY1", node_xy_b()}
+          | {:"node-XY2", node_xy_b()}
+          | {:"node-XY3", node_xy_b()}
+          | {:"node-XY4", node_xy_b()}
+          | {:"node-XY5", node_xy_b()}
+          | {:"node-XY6", node_xy_b()}
+          | {:"node-LatLon", node_llmd_64b()}
+          | {:regional, [map()]}
+
+  @type node_attribute_set :: %{
+          localNode: [node_attribute()],
+          disabled: [segment_attribute()],
+          enabled: [segment_attribute()],
+          data: [lane_data_attribute()],
+          dWidth: integer(),
+          dElevation: integer(),
+          regional: [map()]
+        }
+
+  @type node_attribute ::
+          :reserved
+          | :stopLine
+          | :roundedCapStyleA
+          | :roundedCapStyleB
+          | :mergePoint
+          | :divergePoint
+          | :downstreamStopLine
+          | :downstreamStartNode
+          | :closedToTraffic
+          | :safeIsland
+          | :curbPresentAtStepOff
+          | :hydrantPresent
+
+  @type segment_attribute ::
+          :reserved
+          | :doNotBlock
+          | :whiteLane
+          | :mergingLaneLeft
+          | :mergingLaneRight
+          | :curbOnLeft
+          | :curbOnRight
+          | :loadingzoneOnLeft
+          | :loadingzoneOnRight
+          | :turnOutPointOnLeft
+          | :turnOutPointOnRight
+          | :adjacentParkingOnLeft
+          | :adjacentParkingOnRight
+          | :adjacentBikeLaneOnLeft
+          | :adjacentBikeLaneOnRight
+          | :sharedBikeLane
+          | :bikeBoxInFront
+          | :transitStopOnLeft
+          | :transitStopOnRight
+          | :transitStopInLane
+          | :sharedWithTrackedVehicle
+          | :safeIsland
+          | :lowCurbsPresent
+          | :rumbleStripPresent
+          | :audibleSignalingPresent
+          | :adaptiveTimingPresent
+          | :rfSignalRequestPresent
+          | :partialCurbIntrusion
+          | :taperToLeft
+          | :taperToRight
+          | :taperToCenterLine
+          | :parallelParking
+          | :headInParking
+          | :freeParking
+          | :timeRestrictionsOnParking
+          | :costToPark
+          | :midBlockCurbPresent
+          | :unEvenPavementPresent
+
+  @type lane_data_attribute ::
+          {:pathEndPointAngle, integer()}
+          | {:laneCrownPointCenter, integer()}
+          | {:laneCrownPointLeft, integer()}
+          | {:laneCrownPointRight, integer()}
+          | {:laneAngle, integer()}
+          | {:speedLimits, [regulatory_speed_limit()]}
+          | {:regional, [map()]}
+
+  @type node_ll_b :: %{
+          lon: integer(),
+          lat: integer()
+        }
+
+  @type node_xy_b :: %{
+          x: integer(),
+          y: integer()
+        }
+
+  @type node_llmd_64b :: %{
+          lon: integer(),
+          lat: integer()
+        }
 end

@@ -51,7 +51,12 @@ defmodule Kitt.BSM do
             partII: nil,
             regional: nil
 
-  defmodule BSMCoreData do
+  defmodule CoreData do
+    @moduledoc """
+    Defines the structure and instantiation function
+    for creating a J2735-compliant BSMCoreData data element.
+    """
+
     @type t :: %__MODULE__{
             msgCnt: non_neg_integer(),
             id: binary(),
@@ -99,9 +104,18 @@ defmodule Kitt.BSM do
               accelSet: nil,
               brakes: nil,
               size: nil
+
+    def new(core_data), do: struct(__MODULE__, core_data)
   end
 
-  def new(message), do: struct(__MODULE__, message)
+  def new(message) do
+    {_, core_data_struct} =
+      Map.get_and_update!(message, :coreData, fn core_data ->
+        {core_data, CoreData.new(core_data)}
+      end)
+
+    struct(__MODULE__, core_data_struct)
+  end
 
   def type_id(), do: :DSRC.basicSafetyMessage()
 end
