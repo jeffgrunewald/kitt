@@ -1,4 +1,4 @@
-defmodule Kitt.MAP do
+defmodule Kitt.Message.MAP do
   @moduledoc """
   Defines the structure and instantiation function
   for creating a J2735-compliant MapData message

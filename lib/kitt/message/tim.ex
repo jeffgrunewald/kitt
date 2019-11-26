@@ -1,4 +1,4 @@
-defmodule Kitt.TIM do
+defmodule Kitt.Message.TIM do
   @moduledoc """
   Defines the structure and instantiation function
   for creating a J2735-compliant Traveler Information message
@@ -145,7 +145,7 @@ defmodule Kitt.TIM do
           text: String.t()
         }
 
-  @enfore_keys [:msgCnt, :dataFrames]
+  @enforce_keys [:msgCnt, :dataFrames]
   defstruct dataFrames: nil,
             msgCnt: nil,
             packetID: nil,

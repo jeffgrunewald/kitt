@@ -1,4 +1,4 @@
-defmodule Kitt.SSM do
+defmodule Kitt.Message.SSM do
   @moduledoc """
   Defines the structure and instantiation function
   for creating a J2735-compliant SignalStatusMessage

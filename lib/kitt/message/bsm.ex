@@ -1,11 +1,11 @@
-defmodule Kitt.BSM do
+defmodule Kitt.Message.BSM do
   @moduledoc """
   Defines the structure and instantiation function
   for creating a J2735-compliant BasicSafetyMessage
   """
 
   @type t :: %__MODULE__{
-          coreData: BSMCoreData.t(),
+          coreData: CoreData.t(),
           partII: [partIIcontent()],
           regional: [map()]
         }

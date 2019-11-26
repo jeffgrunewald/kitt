@@ -1,4 +1,4 @@
-defmodule Kitt.SRM do
+defmodule Kitt.Message.SRM do
   @moduledoc """
   Defines the structure and instantiation function
   for creating a J2735-compliant SignalRequestMessage
@@ -60,7 +60,7 @@ defmodule Kitt.SRM do
           speed: Kitt.Types.transmission_and_speed()
         }
 
-  @enfore_keys [:requestor, :second]
+  @enforce_keys [:requestor, :second]
   defstruct regional: nil,
             requestor: nil,
             requests: nil,

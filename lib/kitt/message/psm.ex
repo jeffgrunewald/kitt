@@ -1,4 +1,4 @@
-defmodule Kitt.PSM do
+defmodule Kitt.Message.PSM do
   @moduledoc """
   Defines the structure and instantiation function
   for creating a J2735-compliant PersonalSafetyMessage.

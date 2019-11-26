@@ -5,7 +5,7 @@ defmodule Kitt do
   by the J2735 standard.
   """
 
-  alias Kitt.{BSM, SRM, MAP, SPAT, PSM, SSM, TIM}
+  alias Kitt.{BSM, CSR, EVA, ICA, MAP, PSM, RSA, SPAT, SRM, SSM, TIM}
 
   defmodule(DSRCEncodeError, do: defexception([:message]))
 
@@ -13,31 +13,43 @@ defmodule Kitt do
 
   @type message() ::
           BSM.t()
-          #         | SignalRequestMessage.t()
-          #         | MAPMessage.t()
-          #         | SPaTMessage.t()
+          | CSR.t()
+          | EVA.t()
+          | ICA.t()
+          | MAP.t()
           | PSM.t()
-  # | SignalStatusMessage.t()
-  #         | TravelerInformation.t()
+          | RSA.t()
+          | SPAT.t()
+          | SRM.t()
+          | SSM.t()
+          | TIM.t()
 
   @types %{
     bsm: :BasicSafetyMessage,
-    srm: :SignalRequestMessage,
+    csr: :CommonSafetyRequest,
+    eva: :EmergencyVehicleAlert,
+    ica: :IntersectionCollision,
     map: :MapData,
-    spat: :SPAT,
     psm: :PersonalSafetyMessage,
+    rsa: :RoadSideAlert,
+    spat: :SPAT,
+    srm: :SignalRequestMessage,
     ssm: :SignalStatusMessage,
     tim: :TravelerInformation
   }
 
   @ids %{
-    20 => BSM,
-    29 => SRM,
     18 => MAP,
     19 => SPAT,
-    32 => PSM,
+    20 => BSM,
+    21 => CSR,
+    22 => EVA,
+    23 => ICA,
+    27 => RSA,
+    29 => SRM,
     30 => SSM,
-    31 => TIM
+    31 => TIM,
+    32 => PSM
   }
 
   def encode_message(message, type, opts \\ []) do

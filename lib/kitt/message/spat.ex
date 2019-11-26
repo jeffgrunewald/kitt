@@ -1,4 +1,4 @@
-defmodule Kitt.SPAT do
+defmodule Kitt.Message.SPAT do
   @moduledoc """
   Defines the structure and instantiation function
   for creating a J2735-compliant SignalPhaseandTiming message
@@ -88,7 +88,7 @@ defmodule Kitt.SPAT do
           regional: [Kitt.Types.regional_extension()]
         }
 
-  @enfore_keys [:intersections]
+  @enforce_keys [:intersections]
   defstruct intersections: nil,
             name: nil,
             regional: nil,
