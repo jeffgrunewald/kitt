@@ -5,7 +5,7 @@ defmodule Kitt do
   by the J2735 standard.
   """
 
-  alias Kitt.{BSM, CSR, EVA, ICA, MAP, PSM, RSA, SPAT, SRM, SSM, TIM}
+  alias Kitt.Message.{BSM, CSR, EVA, ICA, MAP, PSM, RSA, SPAT, SRM, SSM, TIM}
 
   defmodule(DSRCEncodeError, do: defexception([:message]))
 
@@ -51,50 +51,6 @@ defmodule Kitt do
     31 => TIM,
     32 => PSM
   }
-
-  def encode_message(message, type, opts \\ []) do
-    src_type = Map.get(@types, type.name)
-
-    opts
-    |> get_format()
-    |> case do
-      :hex -> encode_type(message, src_type, :hex)
-      :binary -> encode_type(message, src_type, :binary)
-      error -> error
-    end
-  end
-
-  def encode_message!(message, type, opts \\ []) do
-    case encode_message(message, type, opts) do
-      {:ok, result} ->
-        result
-
-      {:error, reason} ->
-        raise DSRCEncodeError, message: "Unable to encode message : #{inspect(reason)}"
-    end
-  end
-
-  def decode_message(message, type, opts \\ []) do
-    src_type = Map.get(@types, type.name)
-
-    opts
-    |> get_format()
-    |> case do
-      :hex -> decode_type(message, src_type, :hex)
-      :binary -> decode_type(message, src_type, :binary)
-      error -> error
-    end
-  end
-
-  def decode_message!(message, type, opts \\ []) do
-    case decode_message(message, type, opts) do
-      {:ok, result} ->
-        result
-
-      {:error, reason} ->
-        raise DSRCDecodeError, message: "Unable to decode message : #{inspect(reason)}"
-    end
-  end
 
   def encode(%type{} = message, opts \\ []) do
     type_id = type.type_id()
@@ -155,17 +111,61 @@ defmodule Kitt do
     end
   end
 
+  def encode_message(message, type, opts \\ []) do
+    src_type = Map.get(@types, type)
+
+    opts
+    |> get_format()
+    |> case do
+      :hex -> encode_type(message, src_type, :hex)
+      :binary -> encode_type(message, src_type, :binary)
+      error -> error
+    end
+  end
+
+  def encode_message!(message, type, opts \\ []) do
+    case encode_message(message, type, opts) do
+      {:ok, result} ->
+        result
+
+      {:error, reason} ->
+        raise DSRCEncodeError, message: "Unable to encode message : #{inspect(reason)}"
+    end
+  end
+
+  def decode_message(message, type, opts \\ []) do
+    src_type = Map.get(@types, type)
+
+    opts
+    |> get_format()
+    |> case do
+      :hex -> decode_type(message, src_type, :hex)
+      :binary -> decode_type(message, src_type, :binary)
+      error -> error
+    end
+  end
+
+  def decode_message!(message, type, opts \\ []) do
+    case decode_message(message, type, opts) do
+      {:ok, result} ->
+        result
+
+      {:error, reason} ->
+        raise DSRCDecodeError, message: "Unable to decode message : #{inspect(reason)}"
+    end
+  end
+
   def encode_id(id) do
     encoded_id = :binary.encode_unsigned(id)
     padding = (4 - byte_size(encoded_id)) * 8
     <<0::size(padding)>> <> encoded_id
   end
 
-  defp encode_type(message, type, :binary), do: :DSRC.encode(type, message)
+  defp encode_type(message, type, :binary), do: :DSRC.encode(type, Map.from_struct(message))
 
   defp encode_type(message, type, :hex) do
     type
-    |> :DSRC.encode(message)
+    |> :DSRC.encode(Map.from_struct(message))
     |> Base.encode16()
   end
 

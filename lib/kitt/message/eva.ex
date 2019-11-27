@@ -10,13 +10,13 @@ defmodule Kitt.Message.EVA do
           timeStamp: Kitt.Types.minute_of_year(),
           id: binary(),
           rsaMsg: RSA.t(),
-          responseType: response_type(),
-          details: emergency_details(),
-          mass: vehicle_mass(),
-          basicType: vehicle_type(),
-          vehicleType: itis_vehicle_group_affected(),
-          responseEquip: itis_incident_response_equipment(),
-          responderType: itis_responder_group_affected(),
+          responseType: Kitt.Types.response_type(),
+          details: Kitt.Types.emergency_details(),
+          mass: non_neg_integer(),
+          basicType: Kitt.Types.vehicle_type(),
+          vehicleType: Kitt.Types.vehicle_group_affected(),
+          responseEquip: Kitt.Types.incident_response_equipment(),
+          responderType: Kitt.Types.responder_group_affected(),
           regional: [Kitt.Types.regional_extension()]
         }
 

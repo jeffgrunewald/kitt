@@ -116,15 +116,17 @@ defmodule Kitt.Types do
             | :multiVehicle
             | :reserved,
           events: privileged_events(),
-          responseType:
-            :notInUseOrNotEquipped
-            | :emergency
-            | :nonEmergency
-            | :pursuit
-            | :stationary
-            | :slowMoving
-            | :stopAndGoMovement
+          responseType: response_type()
         }
+
+  @type response_type ::
+          :notInUseOrNotEquipped
+          | :emergency
+          | :nonEmergency
+          | :pursuit
+          | :stationary
+          | :slowMoving
+          | :stopAndGoMovement
 
   @type event_description :: %{
           typeEvent: non_neg_integer(),
@@ -478,96 +480,95 @@ defmodule Kitt.Types do
           | :"military-convoys"
           | :"military-vehicles"
 
-  @type(
-    incident_response_equipment ::
-      :"ground-fire-suppression"
-      | :"heavy-ground-equipment"
-      | :aircraft
-      | :"marine-equipment"
-      | :"support-equipment"
-      | :"medical-rescue-unit"
-      | :other
-      | :"ground-fire-suppression-other"
-      | :engine
-      | :"truck-or-aerial"
-      | :quint
-      | :"tanker-pumper-combination"
-      | :"brush-truck"
-      | :"aircraft-rescue-firefighting"
-      | :"heavy-ground-equipment-other"
-      | :"dozer-or-plow"
-      | :tractor
-      | :"tanker-or-tender"
-      | :"aircraft-other"
-      | :"aircraft-fixed-wing-tanker"
-      | :helitanker
-      | :helicopter
-      | :"marine-equipment-other"
-      | :"fire-boat-with-pump"
-      | :"boat-no-pump"
-      | :"support-apparatus-other"
-      | :"breathing-apparatus-support"
-      | :"light-and-air-unit"
-      | :"medical-rescue-unit-other"
-      | :"rescue-unit"
-      | :"urban-search-rescue-unit"
-      | :"high-angle-rescue"
-      | :"crash-fire-rescue"
-      | :"bLS-unit"
-      | :"aLS-unit"
-      | :"mobile-command-post"
-      | :"chief-officer-car"
-      | :"hAZMAT-unit"
-      | :"type-i-hand-crew"
-      | :"type-ii-hand-crew"
-      | :"privately-owned-vehicle"
-      | :"other-apparatus-resource"
-      | :ambulance
-      | :"bomb-squad-van"
-      | :"combine-harvester"
-      | :"construction-vehicle"
-      | :"farm-tractor"
-      | :"grass-cutting-machines"
-      | :"hAZMAT-containment-tow"
-      | :"heavy-tow"
-      | :"light-tow"
-      | :"flatbed-tow"
-      | :"hedge-cutting-machines"
-      | :"mobile-crane"
-      | :"refuse-collection-vehicle"
-      | :"resurfacing-vehicle"
-      | :"road-sweeper"
-      | :"roadside-litter-collection-crews"
-      | :"salvage-vehicle"
-      | :"sand-truck"
-      | :snowplow
-      | :"steam-roller"
-      | :"swat-team-van"
-      | :"track-laying-vehicle"
-      | :"unknown-vehicle"
-      | :"white-lining-vehicle"
-      | :"dump-truck"
-      | :"supervisor-vehicle"
-      | :"snow-blower"
-      | :"rotary-snow-blower"
-      | :"road-grader"
-      | :"steam-truck",
-    responderType:
-      :"emergency-vehicle-units"
-      | :"federal-law-enforcement-units"
-      | :"state-police-units"
-      | :"county-police-units"
-      | :"local-police-units"
-      | :"ambulance-units"
-      | :"rescue-units"
-      | :"fire-units"
-      | :"hAZMAT-units"
-      | :"light-tow-unit"
-      | :"heavy-tow-unit"
-      | :"freeway-service-patrols"
-      | :"transportation-response-units"
-      | :"private-contractor-response-units"
-  )
+  @type incident_response_equipment ::
+          :"ground-fire-suppression"
+          | :"heavy-ground-equipment"
+          | :aircraft
+          | :"marine-equipment"
+          | :"support-equipment"
+          | :"medical-rescue-unit"
+          | :other
+          | :"ground-fire-suppression-other"
+          | :engine
+          | :"truck-or-aerial"
+          | :quint
+          | :"tanker-pumper-combination"
+          | :"brush-truck"
+          | :"aircraft-rescue-firefighting"
+          | :"heavy-ground-equipment-other"
+          | :"dozer-or-plow"
+          | :tractor
+          | :"tanker-or-tender"
+          | :"aircraft-other"
+          | :"aircraft-fixed-wing-tanker"
+          | :helitanker
+          | :helicopter
+          | :"marine-equipment-other"
+          | :"fire-boat-with-pump"
+          | :"boat-no-pump"
+          | :"support-apparatus-other"
+          | :"breathing-apparatus-support"
+          | :"light-and-air-unit"
+          | :"medical-rescue-unit-other"
+          | :"rescue-unit"
+          | :"urban-search-rescue-unit"
+          | :"high-angle-rescue"
+          | :"crash-fire-rescue"
+          | :"bLS-unit"
+          | :"aLS-unit"
+          | :"mobile-command-post"
+          | :"chief-officer-car"
+          | :"hAZMAT-unit"
+          | :"type-i-hand-crew"
+          | :"type-ii-hand-crew"
+          | :"privately-owned-vehicle"
+          | :"other-apparatus-resource"
+          | :ambulance
+          | :"bomb-squad-van"
+          | :"combine-harvester"
+          | :"construction-vehicle"
+          | :"farm-tractor"
+          | :"grass-cutting-machines"
+          | :"hAZMAT-containment-tow"
+          | :"heavy-tow"
+          | :"light-tow"
+          | :"flatbed-tow"
+          | :"hedge-cutting-machines"
+          | :"mobile-crane"
+          | :"refuse-collection-vehicle"
+          | :"resurfacing-vehicle"
+          | :"road-sweeper"
+          | :"roadside-litter-collection-crews"
+          | :"salvage-vehicle"
+          | :"sand-truck"
+          | :snowplow
+          | :"steam-roller"
+          | :"swat-team-van"
+          | :"track-laying-vehicle"
+          | :"unknown-vehicle"
+          | :"white-lining-vehicle"
+          | :"dump-truck"
+          | :"supervisor-vehicle"
+          | :"snow-blower"
+          | :"rotary-snow-blower"
+          | :"road-grader"
+          | :"steam-truck"
+
+  @type responder_group_affected ::
+          :"emergency-vehicle-units"
+          | :"federal-law-enforcement-units"
+          | :"state-police-units"
+          | :"county-police-units"
+          | :"local-police-units"
+          | :"ambulance-units"
+          | :"rescue-units"
+          | :"fire-units"
+          | :"hAZMAT-units"
+          | :"light-tow-unit"
+          | :"heavy-tow-unit"
+          | :"freeway-service-patrols"
+          | :"transportation-response-units"
+          | :"private-contractor-response-units"
 
   @type basic_vehicle_role ::
           :basicVehicle
