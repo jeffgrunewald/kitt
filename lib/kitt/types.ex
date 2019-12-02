@@ -709,6 +709,11 @@ defmodule Kitt.Types do
           id: non_neg_integer()
         }
 
+  @type road_segment_reference_id :: %{
+          region: non_neg_integer(),
+          id: non_neg_integer()
+        }
+
   @type vehicle_id :: %{
           entityID: binary(),
           stationID: non_neg_integer()

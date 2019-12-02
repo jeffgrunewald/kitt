@@ -54,7 +54,7 @@ defmodule Kitt.Message.TIM do
 
   @type geographical_path :: %{
           name: String.t(),
-          id: road_segment_reference_id(),
+          id: Kitt.Types.road_segment_reference_id(),
           anchor: Kitt.Types.position_3d(),
           laneWidth: non_neg_integer(),
           directionality: direction_of_use(),
@@ -69,11 +69,6 @@ defmodule Kitt.Message.TIM do
           | :forward
           | :reverse
           | :both
-
-  @type road_segment_reference_id :: %{
-          region: non_neg_integer(),
-          id: non_neg_integer()
-        }
 
   @type description ::
           {:path, Kitt.Types.offset_system()}

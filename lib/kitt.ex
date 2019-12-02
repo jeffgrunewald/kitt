@@ -2,15 +2,25 @@ defmodule Kitt do
   @moduledoc """
   Provides encoding and decoding functionality
   for UPER-encoded DSRC message payloads defined
-  by the J2735 standard.
+  by the J2735 standard defined by the Society for
+  Automotive Engineers.
+
+  Kitt uses Erlang's native ASN1 compiler to parse
+  the raw binary of the DSRC messages and then converts
+  them to Elixir structs for language-native enforcement
+  of required message fields, interactions with message
+  data frames/elements, and more flexible conversion to
+  common interchange formats such as JSON, Protobuf, Avro, etc.
   """
 
   alias Kitt.Message.{BSM, CSR, EVA, ICA, MAP, PSM, RSA, SPAT, SRM, SSM, TIM}
+  alias Kitt.{Message, Util}
 
   defmodule(DSRCEncodeError, do: defexception([:message]))
 
   defmodule(DSRCDecodeError, do: defexception([:message]))
 
+  @typedoc "A struct-encoded instance of a J2735 standard message"
   @type message() ::
           BSM.t()
           | CSR.t()
@@ -24,48 +34,31 @@ defmodule Kitt do
           | SSM.t()
           | TIM.t()
 
-  @types %{
-    bsm: :BasicSafetyMessage,
-    csr: :CommonSafetyRequest,
-    eva: :EmergencyVehicleAlert,
-    ica: :IntersectionCollision,
-    map: :MapData,
-    psm: :PersonalSafetyMessage,
-    rsa: :RoadSideAlert,
-    spat: :SPAT,
-    srm: :SignalRequestMessage,
-    ssm: :SignalStatusMessage,
-    tim: :TravelerInformation
-  }
+  @doc """
+  Takes a Kitt message struct and converts it to either a binary
+  or hex version of the message data wrapped in a Message Frame structure
+  tagged with the appropriate ID number.
 
-  @ids %{
-    18 => MAP,
-    19 => SPAT,
-    20 => BSM,
-    21 => CSR,
-    22 => EVA,
-    23 => ICA,
-    27 => RSA,
-    29 => SRM,
-    30 => SSM,
-    31 => TIM,
-    32 => PSM
-  }
+  The default output format is hexadecimal. Optionally define the desired
+  output by passing the keyword flag `format: :hex | :binary`.
 
+  Returns the encoded message wrapped in an `:ok` tuple or an `{:error, reason}` tuple.
+  """
+  @spec encode(message(), format: :hex | :binary) :: {:ok, binary()} | {:error, term()}
   def encode(%type{} = message, opts \\ []) do
     type_id = type.type_id()
 
     [head, middle | tail] =
       %{
         messageId: type_id,
-        value: Map.from_struct(message)
+        value: Util.to_map_recursive(message)
       }
       |> :DSRC.enc_MessageFrame()
 
-    frame = to_binary(head) <> to_binary(middle) <> to_binary(tail)
+    frame = Util.to_binary(head) <> Util.to_binary(middle) <> Util.to_binary(tail)
 
     opts
-    |> get_format()
+    |> Util.get_format()
     |> case do
       :hex -> Base.encode16(frame)
       :binary -> {:ok, frame}
@@ -74,6 +67,11 @@ defmodule Kitt do
     MatchError -> {:error, "Unable to encode message : #{inspect(message)}"}
   end
 
+  @doc """
+  The same as `Kitt.encode/2` but returns the encoded message binary directly
+  without the `:ok` tuple wrapper or raises a `DSRCEncodeError` exception.
+  """
+  @spec encode!(message(), format: :binary | :hex) :: binary()
   def encode!(message, opts \\ []) do
     case encode(message, opts) do
       {:ok, result} ->
@@ -84,23 +82,41 @@ defmodule Kitt do
     end
   end
 
+  @doc """
+  Takes an encoded DSRC Message Frame and decodes it to a Kitt struct of
+  the encoded type.
+
+  Data elements contained within the struct as sub-values with a defined
+  Kitt struct type are recursively instantiated as well.
+
+  The default input format is a hexadecimal string encoding unless specified
+  by passing the optional keyword argument `format: :hex | :binary`
+
+  Returns the struct wrapped in an `:ok` tuple or an `{:error, reason}` tuple.
+  """
+  @spec decode(binary(), format: :hex | :binary) :: {:ok, message()} | {:error, term()}
   def decode(message, opts \\ []) do
     {%{messageId: id, value: message_map}, ""} =
       opts
-      |> get_format()
+      |> Util.get_format()
       |> case do
         :hex -> Base.decode16!(message)
         :binary -> message
       end
       |> :DSRC.dec_MessageFrame()
 
-    struct_type = Map.get(@ids, id)
+    struct_type = Message.message_id(id)
 
     {:ok, struct_type.new(message_map)}
   rescue
     error -> {:error, error}
   end
 
+  @doc """
+  The same as `Kitt.decode/2` but returns the decoded message struct directly
+  without the `:ok` tuple wrapper or raises a `DSRCDecodeError` exception.
+  """
+  @spec decode!(binary(), format: :hex | :binary) :: message()
   def decode!(message, opts \\ []) do
     case decode(message, opts) do
       {:ok, result} ->
@@ -110,84 +126,4 @@ defmodule Kitt do
         raise DSRCDecodeError, message: "Unable to decode message : #{inspect(reason)}"
     end
   end
-
-  def encode_message(message, type, opts \\ []) do
-    src_type = Map.get(@types, type)
-
-    opts
-    |> get_format()
-    |> case do
-      :hex -> encode_type(message, src_type, :hex)
-      :binary -> encode_type(message, src_type, :binary)
-      error -> error
-    end
-  end
-
-  def encode_message!(message, type, opts \\ []) do
-    case encode_message(message, type, opts) do
-      {:ok, result} ->
-        result
-
-      {:error, reason} ->
-        raise DSRCEncodeError, message: "Unable to encode message : #{inspect(reason)}"
-    end
-  end
-
-  def decode_message(message, type, opts \\ []) do
-    src_type = Map.get(@types, type)
-
-    opts
-    |> get_format()
-    |> case do
-      :hex -> decode_type(message, src_type, :hex)
-      :binary -> decode_type(message, src_type, :binary)
-      error -> error
-    end
-  end
-
-  def decode_message!(message, type, opts \\ []) do
-    case decode_message(message, type, opts) do
-      {:ok, result} ->
-        result
-
-      {:error, reason} ->
-        raise DSRCDecodeError, message: "Unable to decode message : #{inspect(reason)}"
-    end
-  end
-
-  def encode_id(id) do
-    encoded_id = :binary.encode_unsigned(id)
-    padding = (4 - byte_size(encoded_id)) * 8
-    <<0::size(padding)>> <> encoded_id
-  end
-
-  defp encode_type(message, type, :binary), do: :DSRC.encode(type, Map.from_struct(message))
-
-  defp encode_type(message, type, :hex) do
-    type
-    |> :DSRC.encode(Map.from_struct(message))
-    |> Base.encode16()
-  end
-
-  defp decode_type(message, type, :hex) do
-    bytes =
-      message
-      |> String.upcase()
-      |> Base.decode16!()
-
-    :DSRC.decode(type, bytes)
-  end
-
-  defp decode_type(message, type, :binary), do: :DSRC.decode(type, message)
-
-  defp get_format(opts) do
-    case Keyword.get(opts, :format) do
-      hex when hex in [nil, :hex] -> :hex
-      :binary -> :binary
-      other -> {:error, "#{inspect(other)} is an unsupported format"}
-    end
-  end
-
-  defp to_binary(data) when is_binary(data), do: data
-  defp to_binary(data) when is_integer(data), do: <<data>>
 end
