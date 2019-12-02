@@ -1,4 +1,10 @@
 defmodule Kitt.Types do
+  @moduledoc """
+  Collection of custom typespec definitions for
+  abstracting the complexity of messages away from
+  the structs that define them.
+  """
+
   @type transmission_state ::
           :neutral
           | :park

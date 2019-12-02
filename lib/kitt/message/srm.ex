@@ -2,8 +2,13 @@ defmodule Kitt.Message.SRM do
   @moduledoc """
   Defines the structure and instantiation function
   for creating a J2735-compliant SignalRequestMessage
+
+  An `SRM` defines the interchange of a DSRC-capable
+  vehicle with the infrastructure regarding signal and
+  timing information pertaining to an intersection
   """
 
+  @typedoc "Defines the structure of a SignalRequestMessage and the data elements comprising its fields"
   @type t :: %__MODULE__{
           timeStamp: Kitt.Types.minute_of_year(),
           second: non_neg_integer(),
@@ -61,14 +66,23 @@ defmodule Kitt.Message.SRM do
         }
 
   @enforce_keys [:requestor, :second]
-  defstruct regional: nil,
-            requestor: nil,
-            requests: nil,
-            second: nil,
-            sequenceNumber: nil,
-            timeStamp: nil
+  defstruct [:regional, :requestor, :requests, :second, :sequenceNumber, :timeStamp]
 
+  @doc """
+  Produces an `SRM` message struct from an equivalent map or keyword input
+  """
+  @spec new(map() | keyword()) :: t()
   def new(message), do: struct(__MODULE__, message)
 
+  @doc """
+  Returns the `SRM` identifying integer
+  """
+  @spec type_id() :: non_neg_integer()
   def type_id(), do: :DSRC.signalRequestMessage()
+
+  @doc """
+  Returns the `SRM` identifying atom recognized by the ASN1 spec
+  """
+  @spec type() :: atom()
+  def type(), do: :SignalRequestMessage
 end

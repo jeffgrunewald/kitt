@@ -2,10 +2,15 @@ defmodule Kitt.Message.EVA do
   @moduledoc """
   Defines the structure and instantiation function
   for creating a J2735-compliant Emergency Vehicle Alert message
+
+  An EVA defines the alert message type emitted by emergency
+  vehicles to other DSRC-capable vehicles entering the vicinity
+  of the incident
   """
 
   alias Kitt.Message.RSA
 
+  @typedoc "Defines the structure of a EmergencyVehicleAlert message and the data elements comprising its component fields"
   @type t :: %__MODULE__{
           timeStamp: Kitt.Types.minute_of_year(),
           id: binary(),
@@ -21,18 +26,24 @@ defmodule Kitt.Message.EVA do
         }
 
   @enforce_keys [:rsaMsg]
-  defstruct basicType: nil,
-            details: nil,
-            id: nil,
-            mass: nil,
-            regional: nil,
-            responderType: nil,
-            responseEquip: nil,
-            responseType: nil,
-            rsaMsg: nil,
-            timeStamp: nil,
-            vehicleType: nil
+  defstruct [
+    :basicType,
+    :details,
+    :id,
+    :mass,
+    :regional,
+    :responderType,
+    :responseEquip,
+    :responseType,
+    :rsaMsg,
+    :timeStamp,
+    :vehicleType
+  ]
 
+  @doc """
+  Produces an `EVA` message struct from an equivalent map or keyword input
+  """
+  @spec new(map() | keyword()) :: t()
   def new(message) do
     {_, rsa_struct} =
       Map.get_and_update!(message, :rsaMsg, fn rsa ->
@@ -42,5 +53,15 @@ defmodule Kitt.Message.EVA do
     struct(__MODULE__, rsa_struct)
   end
 
+  @doc """
+  Returns the `EVA` identifying integer
+  """
+  @spec type_id() :: non_neg_integer()
   def type_id(), do: :DSRC.emergencyVehicleAlert()
+
+  @doc """
+  Returns the `EVA` identifying atom recognized by the ASN1 spec
+  """
+  @spec type() :: atom()
+  def type(), do: :EmergencyVehicleAlert
 end

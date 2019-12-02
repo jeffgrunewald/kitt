@@ -2,14 +2,18 @@ defmodule Kitt.Message.BSM do
   @moduledoc """
   Defines the structure and instantiation function
   for creating a J2735-compliant BasicSafetyMessage
+
+  A `BSM` defines the basic interchange of presence data
+  between DSRC-capable vehicles and infrastructure
   """
 
   defmodule CoreData do
     @moduledoc """
     Defines the structure and instantiation function
-    for creating a J2735-compliant BSMCoreData data element.
+    for creating a J2735-compliant BSMCoreData data element
     """
 
+    @typedoc "Defines the structure of a BSMCoreData data element and the data elements comprising its fields"
     @type t :: %__MODULE__{
             msgCnt: non_neg_integer(),
             id: binary(),
@@ -43,24 +47,31 @@ defmodule Kitt.Message.BSM do
       :brakes,
       :size
     ]
-    defstruct msgCnt: nil,
-              id: nil,
-              secMark: nil,
-              lat: nil,
-              long: nil,
-              elev: nil,
-              accuracy: nil,
-              transmission: nil,
-              speed: nil,
-              heading: nil,
-              angle: nil,
-              accelSet: nil,
-              brakes: nil,
-              size: nil
+    defstruct [
+      :msgCnt,
+      :id,
+      :secMark,
+      :lat,
+      :long,
+      :elev,
+      :accuracy,
+      :transmission,
+      :speed,
+      :heading,
+      :angle,
+      :accelSet,
+      :brakes,
+      :size
+    ]
 
+    @doc """
+    Produces a `CoreData` message struct from an equivalent map or keyword input.
+    """
+    @spec new(map() | keyword()) :: CoreData.t()
     def new(core_data), do: struct(__MODULE__, core_data)
   end
 
+  @typedoc "Defines the BasicSafetyMessage type and the data elements comprising its component fields"
   @type t :: %__MODULE__{
           coreData: CoreData.t(),
           partII: [partIIcontent()],
@@ -104,10 +115,13 @@ defmodule Kitt.Message.BSM do
           | supplemental_vehicle_extensions()
 
   @enforce_keys [:coreData]
-  defstruct coreData: nil,
-            partII: nil,
-            regional: nil
+  defstruct [:coreData, :partII, :regional]
 
+  @doc """
+  Produces a `BSM` message struct from an equivalent map or keyword input.
+  The `coreData` primary field is instantiated as a `CoreData` struct recursively
+  """
+  @spec new(map() | keyword()) :: t()
   def new(message) do
     {_, core_data_struct} =
       Map.get_and_update!(message, :coreData, fn core_data ->
@@ -117,5 +131,15 @@ defmodule Kitt.Message.BSM do
     struct(__MODULE__, core_data_struct)
   end
 
+  @doc """
+  Returns the `BSM` identifying integer
+  """
+  @spec type_id() :: non_neg_integer()
   def type_id(), do: :DSRC.basicSafetyMessage()
+
+  @doc """
+  Returns the `BSM` identifying atom recognized by the ASN1 spec
+  """
+  @spec type() :: atom()
+  def type(), do: :BasicSafetyMessage
 end

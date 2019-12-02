@@ -2,8 +2,12 @@ defmodule Kitt.Message.TIM do
   @moduledoc """
   Defines the structure and instantiation function
   for creating a J2735-compliant Traveler Information message
+
+  A `TIM` defines a generic message type used to relay various advisory
+  notifications to equipped devices, including but not limited to vehicles
   """
 
+  @typedoc "Defines the structure of a TravelerInformation message and the data elements comprising its fields"
   @type t :: %__MODULE__{
           msgCnt: non_neg_integer(),
           timeStamp: Kitt.Types.minute_of_year(),
@@ -141,14 +145,23 @@ defmodule Kitt.Message.TIM do
         }
 
   @enforce_keys [:msgCnt, :dataFrames]
-  defstruct dataFrames: nil,
-            msgCnt: nil,
-            packetID: nil,
-            regional: nil,
-            timeStamp: nil,
-            urlB: nil
+  defstruct [:dataFrames, :msgCnt, :packetID, :regional, :timeStamp, :urlB]
 
+  @doc """
+  Produces a `TIM` message struct from an equivalent map or keyword input
+  """
+  @spec new(map() | keyword()) :: t()
   def new(message), do: struct(__MODULE__, message)
 
+  @doc """
+  Returns the `TIM` identifying integer
+  """
+  @spec type_id() :: non_neg_integer()
   def type_id(), do: :DSRC.travelerInformation()
+
+  @doc """
+  Returns the `TIM` identifying atom recognized by the ASN1 spec
+  """
+  @spec type() :: atom()
+  def type(), do: :TravelerInformation
 end

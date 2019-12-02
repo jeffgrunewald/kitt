@@ -2,8 +2,13 @@ defmodule Kitt.Message.MAP do
   @moduledoc """
   Defines the structure and instantiation function
   for creating a J2735-compliant MapData message
+
+  A MapData message defines the geometry of a roadway
+  intersection including the lanes, ingress/egress vectors
+  and other defined rules for traversing the intersection.
   """
 
+  @typedoc "Defines the MapData message and the data elements comprising its fields"
   @type t :: %__MODULE__{
           timeStamp: Kitt.Types.minute_of_year(),
           msgIssueRevision: non_neg_integer(),
@@ -126,17 +131,33 @@ defmodule Kitt.Message.MAP do
           | {:parking, bitstring()}
 
   @enforce_keys [:msgIssueRevision]
-  defstruct dataParameters: nil,
-            intersections: nil,
-            layerID: nil,
-            layerType: nil,
-            msgIssueRevision: nil,
-            regional: nil,
-            restrictionList: nil,
-            roadSegments: nil,
-            timeStamp: nil
+  defstruct [
+    :dataParameters,
+    :intersections,
+    :layerID,
+    :layerType,
+    :msgIssueRevision,
+    :regional,
+    :restrictionList,
+    :roadSegments,
+    :timeStamp
+  ]
 
+  @doc """
+  Produces a `MAP` message struct from an equivalent map or keyword input
+  """
+  @spec new(map() | keyword()) :: t()
   def new(message), do: struct(__MODULE__, message)
 
+  @doc """
+  Returns the `MAP` identifying integer
+  """
+  @spec type_id() :: non_neg_integer()
   def type_id(), do: :DSRC.mapData()
+
+  @doc """
+  Returns the `MAP` identifying atom recognized by the ASN1 spec
+  """
+  @spec type() :: atom()
+  def type(), do: :MapData
 end

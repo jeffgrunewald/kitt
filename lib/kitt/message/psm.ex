@@ -2,8 +2,13 @@ defmodule Kitt.Message.PSM do
   @moduledoc """
   Defines the structure and instantiation function
   for creating a J2735-compliant PersonalSafetyMessage.
+
+  A `PSM` defines the information exchanged between non-vehicle
+  actors within a DSRC-capable environment and the vehicles
+  and infrastructure of the environment
   """
 
+  @typedoc "Defines the structure of a PersonalSafetyMessage and the data elements comprising its fields"
   @type t :: %__MODULE__{
           accelSet: Kitt.Types.acceleration_set_4_way(),
           accuracy: Kitt.Types.positional_accuracy(),
@@ -66,34 +71,50 @@ defmodule Kitt.Message.PSM do
         }
 
   @enforce_keys [:accuracy, :basicType, :heading, :id, :msgCnt, :position, :secMark, :speed]
-  defstruct accelSet: nil,
-            accuracy: nil,
-            activityType: nil,
-            activitySubType: nil,
-            assistType: nil,
-            attachment: nil,
-            attachmentRadius: nil,
-            basicType: nil,
-            clusterRadius: nil,
-            clusterSize: nil,
-            crossRequest: nil,
-            crossState: nil,
-            eventResponderType: nil,
-            heading: nil,
-            id: nil,
-            msgCnt: nil,
-            pathHistory: nil,
-            pathPrediction: nil,
-            position: nil,
-            propulsion: nil,
-            regional: nil,
-            secMark: nil,
-            sizing: nil,
-            speed: nil,
-            useState: nil,
-            useState: nil
+  defstruct [
+    :accelSet,
+    :accuracy,
+    :activityType,
+    :activitySubType,
+    :assistType,
+    :attachment,
+    :attachmentRadius,
+    :basicType,
+    :clusterRadius,
+    :clusterSize,
+    :crossRequest,
+    :crossState,
+    :eventResponderType,
+    :heading,
+    :id,
+    :msgCnt,
+    :pathHistory,
+    :pathPrediction,
+    :position,
+    :propulsion,
+    :regional,
+    :secMark,
+    :sizing,
+    :speed,
+    :useState,
+    :useState
+  ]
 
+  @doc """
+  Produces the `PSM` message struct from an equivalent map or keyword input
+  """
+  @spec new(map() | keyword()) :: t()
   def new(message), do: struct(__MODULE__, message)
 
+  @doc """
+  Returns the `PSM` identifying integer
+  """
+  @spec type_id() :: non_neg_integer()
   def type_id(), do: :DSRC.personalSafetyMessage()
+
+  @doc """
+  Returns the `PSM` identifying atom recognized by the ASN1 spec
+  """
+  @spec type() :: atom()
+  def type(), do: :PersonalSafetyMessage
 end

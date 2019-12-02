@@ -2,8 +2,13 @@ defmodule Kitt.Message.SSM do
   @moduledoc """
   Defines the structure and instantiation function
   for creating a J2735-compliant SignalStatusMessage
+
+  An `SSM` defines the message sent by DSRC-capable infrastructure
+  to relay to vehicles the status of current signals and collection
+  of pending or active pre-emption or requests
   """
 
+  @typedoc "Defines the structure of a SignalStatusMessage and the data elements comprising its fields"
   @type t :: %__MODULE__{
           timeStamp: Kitt.Types.minute_of_year(),
           second: non_neg_integer(),
@@ -49,13 +54,23 @@ defmodule Kitt.Message.SSM do
           | :reserviceLocked
 
   @enforce_keys [:second, :status]
-  defstruct regional: nil,
-            second: nil,
-            sequenceNumber: nil,
-            status: nil,
-            timeStamp: nil
+  defstruct [:regional, :second, :sequenceNumber, :status, :timeStamp]
 
+  @doc """
+  Produces an `SSM` message struct from an equivalent map or keyword input
+  """
+  @spec new(map() | keyword()) :: t()
   def new(message), do: struct(__MODULE__, message)
 
+  @doc """
+  Returns the `SSM` identifying integer
+  """
+  @spec type_id() :: non_neg_integer()
   def type_id(), do: :DSRC.signalStatusMessage()
+
+  @doc """
+  Returns the `SSM` identifying atom recognized by the ASN1 spec
+  """
+  @spec type() :: atom()
+  def type(), do: :SignalStatusMessage
 end
