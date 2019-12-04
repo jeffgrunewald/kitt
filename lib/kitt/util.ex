@@ -4,6 +4,8 @@ defmodule Kitt.Util do
   for cleaner readability across modules.
   """
 
+  alias Kitt.Message.{BSM, CSR, EVA, ICA, MAP, PSM, RSA, SPAT, SRM, SSM, TIM}
+
   @doc """
   Converts an integer to its 4-byte binary representation
   for compatibility with common J2735 ID field spec.
@@ -14,6 +16,21 @@ defmodule Kitt.Util do
     padding = (4 - byte_size(encoded_id)) * 8
     <<0::size(padding)>> <> encoded_id
   end
+
+  @doc """
+  """
+  @spec type(atom() | non_neg_integer()) :: {module(), atom()}
+  def type(type) when type in [:bsm, 20], do: {BSM, BSM.type()}
+  def type(type) when type in [:csr, 21], do: {CSR, CSR.type()}
+  def type(type) when type in [:eva, 22], do: {EVA, EVA.type()}
+  def type(type) when type in [:ica, 23], do: {ICA, ICA.type()}
+  def type(type) when type in [:map, 18], do: {MAP, MAP.type()}
+  def type(type) when type in [:psm, 32], do: {PSM, PSM.type()}
+  def type(type) when type in [:rsa, 27], do: {RSA, RSA.type()}
+  def type(type) when type in [:spat, 19], do: {SPAT, SPAT.type()}
+  def type(type) when type in [:srm, 29], do: {SRM, SRM.type()}
+  def type(type) when type in [:ssm, 30], do: {SSM, SSM.type()}
+  def type(type) when type in [:tim, 31], do: {TIM, TIM.type()}
 
   @doc """
   Parses a keyword list of options and returns the desired output

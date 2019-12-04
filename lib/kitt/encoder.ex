@@ -26,34 +26,6 @@ defmodule Kitt.Encoder do
           | SSM.t()
           | TIM.t()
 
-  @message_types %{
-    bsm: :BasicSafetyMessage,
-    csr: :CommonSafetyRequest,
-    eva: :EmergencyVehicleAlert,
-    ica: :IntersectionCollision,
-    map: :MapData,
-    psm: :PersonalSafetyMessage,
-    rsa: :RoadSideAlert,
-    spat: :SPAT,
-    srm: :SignalRequestMessage,
-    ssm: :SignalStatusMessage,
-    tim: :TravelerInformation
-  }
-
-  @message_ids %{
-    18 => MAP,
-    19 => SPAT,
-    20 => BSM,
-    21 => CSR,
-    22 => EVA,
-    23 => ICA,
-    27 => RSA,
-    29 => SRM,
-    30 => SSM,
-    31 => TIM,
-    32 => PSM
-  }
-
   @doc """
   Takes a Kitt message struct and converts it to either a binary
   or hex version of the message data wrapped in a Message Frame structure
@@ -125,9 +97,9 @@ defmodule Kitt.Encoder do
       end
       |> :DSRC.dec_MessageFrame()
 
-    struct_type = Map.get(@message_ids, id)
+    {module, _} = Util.type(id)
 
-    {:ok, struct_type.new(message_map)}
+    {:ok, module.new(message_map)}
   rescue
     error -> {:error, error}
   end
@@ -161,7 +133,7 @@ defmodule Kitt.Encoder do
   @spec encode_struct(message(), format: :hex | :binary) ::
           {:ok, binary()} | {:error, term()}
   def encode_struct(%struct{} = message, opts \\ []) do
-    type = struct.type()
+    type = struct.type_id()
 
     convert_message_by_format(message, type, opts, &encode_type/3)
   end
@@ -196,9 +168,7 @@ defmodule Kitt.Encoder do
   @spec encode_message(message() | map(), atom(), format: :hex | :binary) ::
           {:ok, binary()} | {:error, term()}
   def encode_message(message, type, opts \\ []) do
-    src_type = Map.get(@message_types, type)
-
-    convert_message_by_format(message, src_type, opts, &encode_type/3)
+    convert_message_by_format(message, type, opts, &encode_type/3)
   end
 
   @doc """
@@ -229,9 +199,7 @@ defmodule Kitt.Encoder do
   @spec decode_message(binary(), atom(), format: :hex | :binary) ::
           {:ok, message()} | {:error, term()}
   def decode_message(message, type, opts \\ []) do
-    src_type = Map.get(@message_types, type)
-
-    convert_message_by_format(message, src_type, opts, &decode_type/3)
+    convert_message_by_format(message, type, opts, &decode_type/3)
   end
 
   @doc """
@@ -259,21 +227,32 @@ defmodule Kitt.Encoder do
     end
   end
 
-  defp encode_type(message, type, :binary), do: :DSRC.encode(type, Util.to_map_recursive(message))
+  defp encode_type(message, type, :binary) do
+    {_, asn_type} = Util.type(type)
+    :DSRC.encode(asn_type, Util.to_map_recursive(message))
+  end
 
   defp encode_type(message, type, :hex) do
-    {:ok, binary_message} = :DSRC.encode(type, Util.to_map_recursive(message))
+    {_, asn_type} = Util.type(type)
+    {:ok, binary_message} = :DSRC.encode(asn_type, Util.to_map_recursive(message))
     {:ok, Base.encode16(binary_message)}
   end
 
   defp decode_type(message, type, :hex) do
+    {module, asn_type} = Util.type(type)
+
     bytes =
       message
       |> String.upcase()
       |> Base.decode16!()
 
-    :DSRC.decode(type, bytes)
+    {:ok, message_map} = :DSRC.decode(asn_type, bytes)
+    {:ok, module.new(message_map)}
   end
 
-  defp decode_type(message, type, :binary), do: :DSRC.decode(type, message)
+  defp decode_type(message, type, :binary) do
+    {module, asn_type} = Util.type(type)
+    {:ok, message_map} = :DSRC.decode(asn_type, message)
+    {:ok, module.new(message_map)}
+  end
 end

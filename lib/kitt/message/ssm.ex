@@ -59,7 +59,7 @@ defmodule Kitt.Message.SSM do
   @doc """
   Produces an `SSM` message struct from an equivalent map or keyword input
   """
-  @spec new(map() | keyword()) :: t()
+  @spec new(map()) :: t()
   def new(message), do: struct(__MODULE__, message)
 
   @doc """

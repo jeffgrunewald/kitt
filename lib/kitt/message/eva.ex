@@ -43,7 +43,7 @@ defmodule Kitt.Message.EVA do
   @doc """
   Produces an `EVA` message struct from an equivalent map or keyword input
   """
-  @spec new(map() | keyword()) :: t()
+  @spec new(map()) :: t()
   def new(message) do
     {_, rsa_struct} =
       Map.get_and_update!(message, :rsaMsg, fn rsa ->

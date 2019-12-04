@@ -39,7 +39,7 @@ defmodule Kitt.Message.RSA do
   @doc """
   Produces an `RSA` message struct from an equivalent map or keyword input
   """
-  @spec new(map() | keyword()) :: t()
+  @spec new(map()) :: t()
   def new(message), do: struct(__MODULE__, message)
 
   @doc """

@@ -121,7 +121,7 @@ defmodule Kitt.Message.BSM do
   Produces a `BSM` message struct from an equivalent map or keyword input.
   The `coreData` primary field is instantiated as a `CoreData` struct recursively
   """
-  @spec new(map() | keyword()) :: t()
+  @spec new(map()) :: t()
   def new(message) do
     {_, core_data_struct} =
       Map.get_and_update!(message, :coreData, fn core_data ->

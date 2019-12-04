@@ -146,7 +146,7 @@ defmodule Kitt.Message.MAP do
   @doc """
   Produces a `MAP` message struct from an equivalent map or keyword input
   """
-  @spec new(map() | keyword()) :: t()
+  @spec new(map()) :: t()
   def new(message), do: struct(__MODULE__, message)
 
   @doc """

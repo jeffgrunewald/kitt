@@ -45,7 +45,7 @@ defmodule Kitt.Message.ICA do
   @doc """
   Produces an `ICA` message struct from an equivalent map or keyword input
   """
-  @spec new(map() | keyword()) :: t()
+  @spec new(map()) :: t()
   def new(message) do
     {_, core_data_struct} =
       Map.get_and_update(message, :partOne, fn core_data ->

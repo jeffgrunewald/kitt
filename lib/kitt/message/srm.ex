@@ -71,7 +71,7 @@ defmodule Kitt.Message.SRM do
   @doc """
   Produces an `SRM` message struct from an equivalent map or keyword input
   """
-  @spec new(map() | keyword()) :: t()
+  @spec new(map()) :: t()
   def new(message), do: struct(__MODULE__, message)
 
   @doc """
