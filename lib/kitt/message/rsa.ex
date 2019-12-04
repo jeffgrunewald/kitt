@@ -22,6 +22,7 @@ defmodule Kitt.Message.RSA do
           regional: [Kitt.Types.regional_extension()]
         }
 
+  @derive Jason.Encoder
   @enforce_keys [:msgCnt, :typeEvent]
   defstruct [
     :description,
@@ -39,7 +40,7 @@ defmodule Kitt.Message.RSA do
   @doc """
   Produces an `RSA` message struct from an equivalent map or keyword input
   """
-  @spec new(map()) :: t()
+  @spec new(map() | keyword()) :: t()
   def new(message), do: struct(__MODULE__, message)
 
   @doc """

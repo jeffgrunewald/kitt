@@ -130,6 +130,7 @@ defmodule Kitt.Message.MAP do
           | {:trackedVehicle, bitstring()}
           | {:parking, bitstring()}
 
+  @derive Jason.Encoder
   @enforce_keys [:msgIssueRevision]
   defstruct [
     :dataParameters,
@@ -146,7 +147,7 @@ defmodule Kitt.Message.MAP do
   @doc """
   Produces a `MAP` message struct from an equivalent map or keyword input
   """
-  @spec new(map()) :: t()
+  @spec new(map() | keyword()) :: t()
   def new(message), do: struct(__MODULE__, message)
 
   @doc """

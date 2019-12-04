@@ -144,13 +144,14 @@ defmodule Kitt.Message.TIM do
           text: String.t()
         }
 
+  @derive Jason.Encoder
   @enforce_keys [:msgCnt, :dataFrames]
   defstruct [:dataFrames, :msgCnt, :packetID, :regional, :timeStamp, :urlB]
 
   @doc """
   Produces a `TIM` message struct from an equivalent map or keyword input
   """
-  @spec new(map()) :: t()
+  @spec new(map() | keyword()) :: t()
   def new(message), do: struct(__MODULE__, message)
 
   @doc """

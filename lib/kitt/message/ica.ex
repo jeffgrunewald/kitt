@@ -28,6 +28,7 @@ defmodule Kitt.Message.ICA do
           {:approach, non_neg_integer()}
           | {:lane, non_neg_integer()}
 
+  @derive Jason.Encoder
   @enforce_keys [:msgCnt, :id, :intersectionID, :laneNumber, :eventFlags]
   defstruct [
     :eventFlag,
@@ -45,7 +46,7 @@ defmodule Kitt.Message.ICA do
   @doc """
   Produces an `ICA` message struct from an equivalent map or keyword input
   """
-  @spec new(map()) :: t()
+  @spec new(map() | keyword()) :: t()
   def new(message) do
     {_, core_data_struct} =
       Map.get_and_update(message, :partOne, fn core_data ->

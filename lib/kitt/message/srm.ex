@@ -65,13 +65,14 @@ defmodule Kitt.Message.SRM do
           speed: Kitt.Types.transmission_and_speed()
         }
 
+  @derive Jason.Encoder
   @enforce_keys [:requestor, :second]
   defstruct [:regional, :requestor, :requests, :second, :sequenceNumber, :timeStamp]
 
   @doc """
   Produces an `SRM` message struct from an equivalent map or keyword input
   """
-  @spec new(map()) :: t()
+  @spec new(map() | keyword()) :: t()
   def new(message), do: struct(__MODULE__, message)
 
   @doc """

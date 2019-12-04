@@ -53,13 +53,14 @@ defmodule Kitt.Message.SSM do
           | :maxPresence
           | :reserviceLocked
 
+  @derive Jason.Encoder
   @enforce_keys [:second, :status]
   defstruct [:regional, :second, :sequenceNumber, :status, :timeStamp]
 
   @doc """
   Produces an `SSM` message struct from an equivalent map or keyword input
   """
-  @spec new(map()) :: t()
+  @spec new(map() | keyword()) :: t()
   def new(message), do: struct(__MODULE__, message)
 
   @doc """

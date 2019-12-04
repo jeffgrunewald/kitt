@@ -25,6 +25,7 @@ defmodule Kitt.Message.EVA do
           regional: [Kitt.Types.regional_extension()]
         }
 
+  @derive Jason.Encoder
   @enforce_keys [:rsaMsg]
   defstruct [
     :basicType,
@@ -43,7 +44,7 @@ defmodule Kitt.Message.EVA do
   @doc """
   Produces an `EVA` message struct from an equivalent map or keyword input
   """
-  @spec new(map()) :: t()
+  @spec new(map() | keyword()) :: t()
   def new(message) do
     {_, rsa_struct} =
       Map.get_and_update!(message, :rsaMsg, fn rsa ->

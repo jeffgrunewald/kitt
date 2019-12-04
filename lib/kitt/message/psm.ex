@@ -70,6 +70,7 @@ defmodule Kitt.Message.PSM do
           useState: bitstring()
         }
 
+  @derive Jason.Encoder
   @enforce_keys [:accuracy, :basicType, :heading, :id, :msgCnt, :position, :secMark, :speed]
   defstruct [
     :accelSet,
@@ -103,7 +104,7 @@ defmodule Kitt.Message.PSM do
   @doc """
   Produces the `PSM` message struct from an equivalent map or keyword input
   """
-  @spec new(map()) :: t()
+  @spec new(map() | keyword()) :: t()
   def new(message), do: struct(__MODULE__, message)
 
   @doc """

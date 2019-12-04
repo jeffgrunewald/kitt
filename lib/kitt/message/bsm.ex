@@ -31,6 +31,7 @@ defmodule Kitt.Message.BSM do
             size: Kitt.Types.vehicle_size()
           }
 
+    @derive Jason.Encoder
     @enforce_keys [
       :msgCnt,
       :id,
@@ -114,6 +115,7 @@ defmodule Kitt.Message.BSM do
           | special_vehicle_extensions()
           | supplemental_vehicle_extensions()
 
+  @derive Jason.Encoder
   @enforce_keys [:coreData]
   defstruct [:coreData, :partII, :regional]
 
@@ -121,7 +123,7 @@ defmodule Kitt.Message.BSM do
   Produces a `BSM` message struct from an equivalent map or keyword input.
   The `coreData` primary field is instantiated as a `CoreData` struct recursively
   """
-  @spec new(map()) :: t()
+  @spec new(map() | keyword()) :: t()
   def new(message) do
     {_, core_data_struct} =
       Map.get_and_update!(message, :coreData, fn core_data ->

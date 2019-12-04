@@ -35,13 +35,14 @@ defmodule Kitt.Message.CSR do
           | :itemP
           | :itemQ
 
+  @derive Jason.Encoder
   @enforce_keys [:requests]
   defstruct [:id, :msgCnt, :regional, :requests, :timeStamp]
 
   @doc """
   Produces a `CSR` message struct from an equivalent map or keyword input
   """
-  @spec new(map()) :: t()
+  @spec new(map() | keyword()) :: t()
   def new(message), do: struct(__MODULE__, message)
 
   @doc """
