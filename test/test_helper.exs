@@ -8,7 +8,7 @@ defmodule TestHelper do
     do: %Kitt.Message.BSM{
       coreData: %Kitt.Message.BSM.CoreData{
         accelSet: %{lat: 2001, long: 2001, vert: -127, yaw: 0},
-        accuracy: %{orientation: 65535, semiMajor: 255, semiMinor: 255},
+        accuracy: %{orientation: 65_535, semiMajor: 255, semiMinor: 255},
         angle: 127,
         brakes: %{
           abs: :unavailable,
@@ -24,7 +24,7 @@ defmodule TestHelper do
         lat: 374_230_638,
         long: -1_221_420_467,
         msgCnt: 1,
-        secMark: 43476,
+        secMark: 43_476,
         size: %{length: 1200, width: 300},
         speed: 486,
         transmission: :unavailable

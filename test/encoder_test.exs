@@ -10,7 +10,7 @@ defmodule Kitt.EncoderTest do
          %Kitt.Message.BSM{
            coreData: %Kitt.Message.BSM.CoreData{
              accelSet: %{lat: 2001, long: 2001, vert: -127, yaw: 0},
-             accuracy: %{orientation: 65535, semiMajor: 255, semiMinor: 255},
+             accuracy: %{orientation: 65_535, semiMajor: 255, semiMinor: 255},
              angle: 127,
              brakes: %{
                abs: :unavailable,
@@ -21,12 +21,12 @@ defmodule Kitt.EncoderTest do
                wheelBrakes: []
              },
              elev: 2750,
-             heading: 22000,
+             heading: 22_000,
              id: <<0, 0, 40, 148>>,
              lat: 402_364_127,
              long: -833_667_351,
              msgCnt: 72,
-             secMark: 48275,
+             secMark: 48_275,
              size: %{length: 530, width: 150},
              speed: 305,
              transmission: :unavailable
@@ -86,7 +86,7 @@ defmodule Kitt.EncoderTest do
       result1 = %Kitt.Message.BSM{
         coreData: %Kitt.Message.BSM.CoreData{
           accelSet: %{lat: -2000, long: 32, vert: -126, yaw: -255},
-          accuracy: %{orientation: 43520, semiMajor: 180, semiMinor: 161},
+          accuracy: %{orientation: 43_520, semiMajor: 180, semiMinor: 161},
           angle: -126,
           brakes: %{
             abs: :unavailable,
@@ -776,7 +776,7 @@ defmodule Kitt.EncoderTest do
                 "state-time-speed": [
                   %{
                     eventState: :"protected-clearance",
-                    timing: %{maxEndTime: 29788, minEndTime: 29788, startTime: 29751}
+                    timing: %{maxEndTime: 29_788, minEndTime: 29_788, startTime: 29_751}
                   }
                 ]
               },
@@ -785,7 +785,7 @@ defmodule Kitt.EncoderTest do
                 "state-time-speed": [
                   %{
                     eventState: :"stop-And-Remain",
-                    timing: %{maxEndTime: 29788, minEndTime: 29788, startTime: 29751}
+                    timing: %{maxEndTime: 29_788, minEndTime: 29_788, startTime: 29_751}
                   }
                 ]
               },
@@ -794,7 +794,7 @@ defmodule Kitt.EncoderTest do
                 "state-time-speed": [
                   %{
                     eventState: :"stop-And-Remain",
-                    timing: %{maxEndTime: 30239, minEndTime: 30099, startTime: 29751}
+                    timing: %{maxEndTime: 30_239, minEndTime: 30_099, startTime: 29_751}
                   }
                 ]
               },
@@ -803,7 +803,7 @@ defmodule Kitt.EncoderTest do
                 "state-time-speed": [
                   %{
                     eventState: :"stop-And-Remain",
-                    timing: %{maxEndTime: 30746, minEndTime: 30256, startTime: 29751}
+                    timing: %{maxEndTime: 30_746, minEndTime: 30_256, startTime: 29_751}
                   }
                 ]
               },
@@ -812,7 +812,7 @@ defmodule Kitt.EncoderTest do
                 "state-time-speed": [
                   %{
                     eventState: :"stop-And-Remain",
-                    timing: %{maxEndTime: 31393, minEndTime: 30723, startTime: 29751}
+                    timing: %{maxEndTime: 31_393, minEndTime: 30_723, startTime: 29_751}
                   }
                 ]
               },
@@ -821,7 +821,7 @@ defmodule Kitt.EncoderTest do
                 "state-time-speed": [
                   %{
                     eventState: :"permissive-Movement-Allowed",
-                    timing: %{maxEndTime: 30161, minEndTime: 29784, startTime: 29751}
+                    timing: %{maxEndTime: 30_161, minEndTime: 29_784, startTime: 29_751}
                   }
                 ]
               },
@@ -830,7 +830,7 @@ defmodule Kitt.EncoderTest do
                 "state-time-speed": [
                   %{
                     eventState: :"stop-And-Remain",
-                    timing: %{maxEndTime: 30239, minEndTime: 30099, startTime: 29751}
+                    timing: %{maxEndTime: 30_239, minEndTime: 30_099, startTime: 29_751}
                   }
                 ]
               },
@@ -839,7 +839,7 @@ defmodule Kitt.EncoderTest do
                 "state-time-speed": [
                   %{
                     eventState: :"stop-And-Remain",
-                    timing: %{maxEndTime: 30876, minEndTime: 30256, startTime: 29751}
+                    timing: %{maxEndTime: 30_876, minEndTime: 30_256, startTime: 29_751}
                   }
                 ]
               },
@@ -848,7 +848,7 @@ defmodule Kitt.EncoderTest do
                 "state-time-speed": [
                   %{
                     eventState: :"stop-And-Remain",
-                    timing: %{maxEndTime: 29788, minEndTime: 29788, startTime: 29751}
+                    timing: %{maxEndTime: 29_788, minEndTime: 29_788, startTime: 29_751}
                   }
                 ]
               },
@@ -857,7 +857,7 @@ defmodule Kitt.EncoderTest do
                 "state-time-speed": [
                   %{
                     eventState: :"stop-And-Remain",
-                    timing: %{maxEndTime: 30746, minEndTime: 30256, startTime: 29751}
+                    timing: %{maxEndTime: 30_746, minEndTime: 30_256, startTime: 29_751}
                   }
                 ]
               },
@@ -866,7 +866,7 @@ defmodule Kitt.EncoderTest do
                 "state-time-speed": [
                   %{
                     eventState: :"stop-And-Remain",
-                    timing: %{maxEndTime: 31810, minEndTime: 30880, startTime: 29751}
+                    timing: %{maxEndTime: 31_810, minEndTime: 30_880, startTime: 29_751}
                   }
                 ]
               },
@@ -875,13 +875,13 @@ defmodule Kitt.EncoderTest do
                 "state-time-speed": [
                   %{
                     eventState: :"stop-And-Remain",
-                    timing: %{maxEndTime: 30876, minEndTime: 30256, startTime: 29751}
+                    timing: %{maxEndTime: 30_876, minEndTime: 30_256, startTime: 29_751}
                   }
                 ]
               }
             ],
             status: [],
-            timeStamp: 35193
+            timeStamp: 35_193
           }
         ],
         name: nil,
@@ -911,10 +911,10 @@ defmodule Kitt.EncoderTest do
               requestID: 5,
               requestType: :priorityRequest
             },
-            second: 18140
+            second: 18_140
           }
         ],
-        second: 48140,
+        second: 48_140,
         sequenceNumber: 2,
         timeStamp: 497_731
       }
