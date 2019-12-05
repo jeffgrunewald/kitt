@@ -1,3 +1,5 @@
+[![Master](https://travis-ci.org/jeffgrunewald/kitt.svg?branch=master)](https://travis-ci.org/jeffgrunewald/kitt)
+
 # kitt
 
 ### description
@@ -8,6 +10,9 @@ specification enforcement and operations.
 Incoming messages are UPER-encoded binary payloads in either raw or hexadecimal
 format. Elixir structs or basic maps producing the necessary fields for a
 valid message are accepted for encoding.
+
+Kitt is named for the talking "smart car" character KITT from the 1980s American
+television series "Knight Rider".
 
 ### background
 Messages, data frames, and their component data elements are based on the
