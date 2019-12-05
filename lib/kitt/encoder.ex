@@ -52,7 +52,7 @@ defmodule Kitt.Encoder do
     opts
     |> Util.get_format()
     |> case do
-      :hex -> Base.encode16(frame)
+      :hex -> {:ok, Base.encode16(frame)}
       :binary -> {:ok, frame}
     end
   rescue

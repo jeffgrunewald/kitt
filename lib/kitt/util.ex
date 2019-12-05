@@ -18,6 +18,12 @@ defmodule Kitt.Util do
   end
 
   @doc """
+  Converts a fixed-size byte identifier field to a human-readable integer
+  """
+  @spec decode_id(binary()) :: non_neg_integer()
+  def decode_id(id), do: :binary.decode_unsigned(id)
+
+  @doc """
   """
   @spec type(atom() | non_neg_integer()) :: {module(), atom()}
   def type(type) when type in [:bsm, 20], do: {BSM, BSM.type()}
