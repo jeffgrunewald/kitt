@@ -222,6 +222,7 @@ enc_AttachmentRadius/1,
 enc_AuxiliaryBrakeStatus/1,
 enc_BasicVehicleClass/1,
 enc_BasicVehicleRole/1,
+enc_Binary_Id/1,
 enc_BrakeAppliedPressure/1,
 enc_BrakeAppliedStatus/1,
 enc_BrakeBoostApplied/1,
@@ -479,6 +480,7 @@ dec_AdvisorySpeed/1,
 dec_AdvisorySpeedList/1,
 dec_AntennaOffsetSet/1,
 dec_ApproachOrLane/1,
+dec_Binary_Id/1,
 dec_BrakeSystemStatus/1,
 dec_BSMcoreData/1,
 dec_BumperHeights/1,
@@ -1031,6 +1033,22 @@ try
          {error,{asn1,{Reason,Stk}}}
       end
 end.
+
+enc_Binary_Id(Val) ->
+    if
+        is_integer(Val) ->
+            Encoded_Id = binary:encode_unsigned(Val),
+            Padding = (4 - byte_size(Encoded_Id)) * 8,
+            <<0:Padding,Encoded_Id/binary>>;
+        is_binary(Val) ->
+            Encoded@len = byte_size(Val),
+            if Encoded@len =:= 4 ->
+                    Val
+            end
+    end.
+
+dec_Binary_Id(Val) ->
+    binary:decode_unsigned(Val).
 
 encode_disp('MessageFrame', Data) -> enc_MessageFrame(Data);
 encode_disp('BasicSafetyMessage', Data) -> enc_BasicSafetyMessage(Data);
@@ -2373,7 +2391,7 @@ end,
 begin
 <<V5@V0:4/binary-unit:8,V5@Buf1/bitstring>> = Bytes4,
 V5@Conv2 = binary:copy(V5@V0),
-{V5@Conv2,V5@Buf1}
+{dec_Binary_Id(V5@Conv2),V5@Buf1}
 end;
 0 ->
 {asn1_NOVALUE,Bytes4}
@@ -2586,10 +2604,7 @@ if Input@2 =:= asn1__MISSING_IN_MAP ->
 [];
 true ->
 begin
-Enc4@len = byte_size(Input@2),
-if Enc4@len =:= 4 ->
-Input@2
-end
+enc_Binary_Id(Input@2)
 end
 end
 end,
@@ -3008,7 +3023,7 @@ end,
 begin
 <<V4@V0:4/binary-unit:8,V4@Buf1/bitstring>> = Bytes3,
 V4@Conv2 = binary:copy(V4@V0),
-{V4@Conv2,V4@Buf1}
+{dec_Binary_Id(V4@Conv2),V4@Buf1}
 end;
 0 ->
 {asn1_NOVALUE,Bytes3}
@@ -3522,10 +3537,7 @@ end
 end,
 begin
 %% attribute id(2) with type OCTET STRING
-Enc3@len = byte_size(Input@2),
-if Enc3@len =:= 4 ->
-Input@2
-end
+enc_Binary_Id(Input@2)
 end,
 begin
 %% attribute timeStamp(3) with type INTEGER
@@ -3646,7 +3658,7 @@ end,
 {Term2,Bytes4} = begin
 <<V4@V0:4/binary-unit:8,V4@Buf1/bitstring>> = Bytes3,
 V4@Conv2 = binary:copy(V4@V0),
-{V4@Conv2,V4@Buf1}
+{dec_Binary_Id(V4@Conv2),V4@Buf1}
 end,
 
 %% attribute timeStamp(3) with type INTEGER
@@ -4768,10 +4780,7 @@ end
 end,
 begin
 %% attribute id(4) with type OCTET STRING
-Enc5@len = byte_size(Input@4),
-if Enc5@len =:= 4 ->
-Input@4
-end
+enc_Binary_Id(Input@2)
 end,
 begin
 %% attribute position(5) with type Position3D
@@ -5175,7 +5184,7 @@ end,
 {Term4,Bytes6} = begin
 <<V6@V0:4/binary-unit:8,V6@Buf1/bitstring>> = Bytes5,
 V6@Conv2 = binary:copy(V6@V0),
-{V6@Conv2,V6@Buf1}
+{dec_Binary_Id(V6@Conv2),V6@Buf1}
 end,
 
 %% attribute position(5) with type Position3D
@@ -11144,10 +11153,7 @@ end
 end,
 begin
 %% attribute id(2) with type OCTET STRING
-Enc2@len = byte_size(Input@2),
-if Enc2@len =:= 4 ->
-Input@2
-end
+enc_Binary_Id(Input@2)
 end,
 begin
 %% attribute secMark(3) with type INTEGER
@@ -11260,7 +11266,7 @@ end,
 {Term2,Bytes2} = begin
 <<V2@V0:4/binary-unit:8,V2@Buf1/bitstring>> = Bytes1,
 V2@Conv2 = binary:copy(V2@V0),
-{V2@Conv2,V2@Buf1}
+{dec_Binary_Id(V2@Conv2), V2@Buf1}
 end,
 
 %% attribute secMark(3) with type INTEGER

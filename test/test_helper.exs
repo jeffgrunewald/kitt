@@ -20,7 +20,7 @@ defmodule TestHelper do
         },
         elev: 1260,
         heading: 4800,
-        id: <<0, 0, 2, 89>>,
+        id: 601,
         lat: 374_230_638,
         long: -1_221_420_467,
         msgCnt: 1,
