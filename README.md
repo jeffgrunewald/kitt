@@ -1,4 +1,4 @@
-[![Master](https://travis-ci.org/jeffgrunewald/kitt.svg?branch=master)](https://travis-ci.org/jeffgrunewald/kitt)
+![](https://github.com/jeffgrunewald/kitt/workflows/CI/badge.svg)
 
 # kitt
 
