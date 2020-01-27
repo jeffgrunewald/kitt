@@ -20,7 +20,7 @@ defmodule Kitt.Message.SPAT do
           name: String.t(),
           id: Kitt.Types.intersection_reference_id(),
           revision: non_neg_integer(),
-          status: bitstring(),
+          status: atom(),
           moy: Kitt.Types.minute_of_year(),
           timeStamp: non_neg_integer(),
           enabledLanes: [non_neg_integer()],

@@ -223,6 +223,7 @@ enc_AuxiliaryBrakeStatus/1,
 enc_BasicVehicleClass/1,
 enc_BasicVehicleRole/1,
 enc_Binary_Id/1,
+enc_Binary_Id/2,
 enc_BrakeAppliedPressure/1,
 enc_BrakeAppliedStatus/1,
 enc_BrakeBoostApplied/1,
@@ -1034,21 +1035,24 @@ try
       end
 end.
 
-enc_Binary_Id(Val) ->
+enc_Binary_Id(Val) -> enc_Binary_Id(Val, 4).
+enc_Binary_Id(Val, Length) ->
     if
         is_integer(Val) ->
             Encoded_Id = binary:encode_unsigned(Val),
-            Padding = (4 - byte_size(Encoded_Id)) * 8,
+            Padding = (Length - byte_size(Encoded_Id)) * 8,
             <<0:Padding,Encoded_Id/binary>>;
-        is_binary(Val) ->
+        is_bitstring(Val) ->
             Encoded@len = byte_size(Val),
-            if Encoded@len =:= 4 ->
-                    Val
+            if Encoded@len =:= Length ->
+                Val
             end
     end.
 
 dec_Binary_Id(Val) ->
-    binary:decode_unsigned(Val).
+    BitPadding = 8 - (bit_size(Val) rem 8),
+    ValAsBin = <<0:BitPadding, Val/bits>>,
+    binary:decode_unsigned(ValAsBin).
 
 encode_disp('MessageFrame', Data) -> enc_MessageFrame(Data);
 encode_disp('BasicSafetyMessage', Data) -> enc_BasicSafetyMessage(Data);
@@ -2304,10 +2308,7 @@ if Input@3 =:= asn1__MISSING_IN_MAP ->
 [];
 true ->
 begin
-Enc6@len = byte_size(Input@3),
-if Enc6@len =:= 4 ->
-Input@3
-end
+enc_Binary_Id(Input@3)
 end
 end
 end,
@@ -6431,10 +6432,7 @@ if Input@5 =:= asn1__MISSING_IN_MAP ->
 [];
 true ->
 begin
-Enc7@len = byte_size(Input@5),
-if Enc7@len =:= 1 ->
-Input@5
-end
+enc_Binary_Id(Input@5, 1)
 end
 end
 end,
@@ -6511,10 +6509,7 @@ if Input@9 =:= asn1__MISSING_IN_MAP ->
 [];
 true ->
 begin
-Enc14@len = byte_size(Input@9),
-if Enc14@len =:= 2 ->
-Input@9
-end
+enc_Binary_Id(Input@9, 2)
 end
 end
 end|begin
@@ -6675,7 +6670,7 @@ end,
 begin
 <<V9@V0:2/binary-unit:8,V9@Buf1/bitstring>> = Bytes10,
 V9@Conv2 = binary:copy(V9@V0),
-{V9@Conv2,V9@Buf1}
+{dec_Binary_Id(V9@Conv2),V9@Buf1}
 end;
 0 ->
 {asn1_NOVALUE,Bytes10}
@@ -7833,10 +7828,7 @@ if Input@3 =:= asn1__MISSING_IN_MAP ->
 [];
 true ->
 begin
-Enc5@len = byte_size(Input@3),
-if Enc5@len =:= 9 ->
-Input@3
-end
+enc_Binary_Id(Input@3, 9)
 end
 end
 end,
@@ -7930,7 +7922,7 @@ end,
 begin
 <<V5@V0:9/binary-unit:8,V5@Buf1/bitstring>> = Bytes4,
 V5@Conv2 = binary:copy(V5@V0),
-{V5@Conv2,V5@Buf1}
+{dec_Binary_Id(V5@Conv2),V5@Buf1}
 end;
 0 ->
 {asn1_NOVALUE,Bytes4}
@@ -14291,10 +14283,7 @@ if Input@3 =:= asn1__MISSING_IN_MAP ->
 [];
 true ->
 begin
-Enc4@len = byte_size(Input@3),
-if Enc4@len =:= 1 ->
-Input@3
-end
+enc_Binary_Id(Input@3, 1)
 end
 end
 end,
@@ -14436,7 +14425,7 @@ end,
 begin
 <<V4@V0:1/binary-unit:8,V4@Buf1/bitstring>> = Bytes4,
 V4@Conv2 = binary:copy(V4@V0),
-{V4@Conv2,V4@Buf1}
+{dec_Binary_Id(V4@Conv2),V4@Buf1}
 end;
 0 ->
 {asn1_NOVALUE,Bytes4}
@@ -25212,10 +25201,7 @@ if Input@4 =:= asn1__MISSING_IN_MAP ->
 [];
 true ->
 begin
-Enc4@len = byte_size(Input@4),
-if Enc4@len =:= 2 ->
-Input@4
-end
+enc_Binary_Id(Input@4, 2)
 end
 end
 end].
@@ -25285,7 +25271,7 @@ end,
 begin
 <<V4@V0:2/binary-unit:8,V4@Buf1/bitstring>> = Bytes4,
 V4@Conv2 = binary:copy(V4@V0),
-{V4@Conv2,V4@Buf1}
+{dec_Binary_Id(V4@Conv2),V4@Buf1}
 end;
 0 ->
 {asn1_NOVALUE,Bytes4}
@@ -29056,10 +29042,7 @@ enc_TravelerDataFrame_msgId(Val) ->
 {ChoiceTag,ChoiceVal} = Val,
 if ChoiceTag =:= furtherInfoID ->
 begin
-Enc2@len = byte_size(ChoiceVal),
-if Enc2@len =:= 2 ->
-[<<0:1>>|ChoiceVal]
-end
+[<<0:1>>|enc_Binary_Id(ChoiceVal, 2)]
 end;
 ChoiceTag =:= roadSignID ->
 [<<1:1>>|enc_RoadSignID(ChoiceVal)]
@@ -29253,7 +29236,7 @@ V2@Conv2 = binary:copy(V2@V0),
 {V2@Conv2,V2@Buf1}
 end
 end,
-{{furtherInfoID,Val},NewBytes};
+{{furtherInfoID,dec_Binary_Id(Val)},NewBytes};
 1 ->
 {Val,NewBytes} = begin
 dec_RoadSignID(Bytes1)
@@ -31445,10 +31428,7 @@ enc_VehicleID(Val) ->
 {ChoiceTag,ChoiceVal} = Val,
 if ChoiceTag =:= entityID ->
 begin
-Enc2@len = byte_size(ChoiceVal),
-if Enc2@len =:= 4 ->
-[<<0:1>>|ChoiceVal]
-end
+[<<0:1>>|enc_Binary_Id(ChoiceVal)]
 end;
 ChoiceTag =:= stationID ->
 if ChoiceVal bsr 32 =:= 0 ->
@@ -31474,7 +31454,7 @@ V2@Conv2 = binary:copy(V2@V0),
 {V2@Conv2,V2@Buf1}
 end
 end,
-{{entityID,Val},NewBytes};
+{{entityID, dec_Binary_Id(Val)},NewBytes};
 1 ->
 {Val,NewBytes} = begin
 begin
@@ -41849,7 +41829,7 @@ V2@Add2 = V2@V0 + 1,
 V2@Conv5 = binary:copy(V2@V3),
 {V2@Conv5,V2@Buf4}
 end,
-dec_components113(Num-1, Remain, [Term|Acc]).
+dec_components113(Num-1, Remain, [dec_Binary_Id(Term)|Acc]).
 
 dec_components114(0, Bytes, Acc) ->
 {lists:reverse(Acc),Bytes};

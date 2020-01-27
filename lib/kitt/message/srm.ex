@@ -45,7 +45,7 @@ defmodule Kitt.Message.SRM do
           position: requestor_position_vector(),
           name: String.t(),
           routeName: String.t(),
-          transitStatus: bitstring(),
+          transitStatus: atom(),
           transitOccupancy:
             :occupancyUnknown
             | :occupancyEmpty

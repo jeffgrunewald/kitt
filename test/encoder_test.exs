@@ -892,7 +892,7 @@ defmodule Kitt.EncoderTest do
       result2 = %Kitt.Message.SRM{
         regional: nil,
         requestor: %{
-          id: {:entityID, <<0, 0, 2, 89>>},
+          id: {:entityID, 601},
           position: %{
             heading: 4800,
             position: %{elevation: 1260, lat: 374_230_638, long: -1_221_420_467},

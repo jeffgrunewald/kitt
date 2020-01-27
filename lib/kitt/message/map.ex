@@ -93,7 +93,7 @@ defmodule Kitt.Message.MAP do
           ingressApproach: non_neg_integer(),
           egressApproach: non_neg_integer(),
           laneAttributes: lane_attributes(),
-          maneuvers: bitstring(),
+          maneuvers: atom(),
           nodeList: Kitt.Types.node_list_xy(),
           connectsTo: [connection()],
           overlays: [non_neg_integer()],
@@ -110,25 +110,25 @@ defmodule Kitt.Message.MAP do
 
   @type connecting_lane :: %{
           lane: non_neg_integer(),
-          maneuver: bitstring()
+          maneuver: atom()
         }
 
   @type lane_attributes :: %{
-          directionalUse: bitstring(),
-          sharedWith: bitstring(),
+          directionalUse: atom(),
+          sharedWith: atom(),
           laneType: lane_attribute_type(),
           regional: [Kitt.Types.regional_extension()]
         }
 
   @type lane_attribute_type ::
-          {:vehicle, bitstring()}
-          | {:crosswalk, bitstring()}
-          | {:bikeLane, bitstring()}
-          | {:sidewalk, bitstring()}
-          | {:median, bitstring()}
-          | {:striping, bitstring()}
-          | {:trackedVehicle, bitstring()}
-          | {:parking, bitstring()}
+          {:vehicle, atom()}
+          | {:crosswalk, atom()}
+          | {:bikeLane, atom()}
+          | {:sidewalk, atom()}
+          | {:median, atom()}
+          | {:striping, atom()}
+          | {:trackedVehicle, atom()}
+          | {:parking, atom()}
 
   @derive Jason.Encoder
   @enforce_keys [:msgIssueRevision]

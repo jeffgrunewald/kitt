@@ -11,7 +11,7 @@ defmodule Kitt.Message.CSR do
   @type t :: %__MODULE__{
           timeStamp: Kitt.Types.minute_of_year(),
           msgCnt: non_neg_integer(),
-          id: binary(),
+          id: non_neg_integer(),
           requests: [request_item()],
           regional: [Kitt.Types.regional_extension()]
         }

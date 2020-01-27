@@ -12,9 +12,9 @@ defmodule Kitt.Message.PSM do
   @type t :: %__MODULE__{
           accelSet: Kitt.Types.acceleration_set_4_way(),
           accuracy: Kitt.Types.positional_accuracy(),
-          activityType: bitstring(),
-          activitySubType: bitstring(),
-          assistType: bitstring(),
+          activityType: atom(),
+          activitySubType: atom(),
+          assistType: atom(),
           attachment:
             :unavailable
             | :stroller
@@ -47,7 +47,7 @@ defmodule Kitt.Message.PSM do
             | :otherPersonnel
             | {:asn1_enum, non_neg_integer()},
           heading: non_neg_integer(),
-          id: binary(),
+          id: non_neg_integer(),
           msgCnt: non_neg_integer(),
           pathHistory: Kitt.Types.path_history(),
           pathPrediction: Kitt.Types.path_prediction(),
@@ -65,9 +65,9 @@ defmodule Kitt.Message.PSM do
                | :selfBalancingDevice},
           regional: [Kitt.Types.regional_extension()],
           secMark: non_neg_integer(),
-          sizing: bitstring(),
+          sizing: atom(),
           speed: non_neg_integer(),
-          useState: bitstring()
+          useState: atom()
         }
 
   @derive Jason.Encoder
