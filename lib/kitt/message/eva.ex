@@ -13,7 +13,7 @@ defmodule Kitt.Message.EVA do
   @typedoc "Defines the structure of a EmergencyVehicleAlert message and the data elements comprising its component fields"
   @type t :: %__MODULE__{
           timeStamp: Kitt.Types.minute_of_year(),
-          id: binary(),
+          id: non_neg_integer(),
           rsaMsg: RSA.t(),
           responseType: Kitt.Types.response_type(),
           details: Kitt.Types.emergency_details(),

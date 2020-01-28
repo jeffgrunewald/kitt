@@ -22,7 +22,7 @@ defmodule Kitt.Types do
           yaw: integer()
         }
   @type brake_system_status :: %{
-          wheelBrakes: bitstring(),
+          wheelBrakes: wheel_brake(),
           traction:
             :unavailable
             | :off
@@ -48,6 +48,10 @@ defmodule Kitt.Types do
             | :on
             | :reserved
         }
+
+  @type wheel_brake ::
+          :unavailable
+          | quadrant()
 
   @type vehicle_size :: %{
           width: non_neg_integer(),
@@ -97,8 +101,16 @@ defmodule Kitt.Types do
 
   @type privileged_events :: %{
           sspRights: non_neg_integer(),
-          event: bitstring()
+          event: privileged_event_flag()
         }
+
+  @type privileged_event_flag ::
+          :peUnavailable
+          | :peEmergencyResponse
+          | :peEmergencyLightsActive
+          | :peEmergencySoundActive
+          | :peNonEmergencyLightsActive
+          | :peNonEmergencySoundActive
 
   @type emergency_details :: %{
           sspRights: non_neg_integer(),
@@ -137,11 +149,44 @@ defmodule Kitt.Types do
   @type event_description :: %{
           typeEvent: non_neg_integer(),
           description: [non_neg_integer()],
-          priority: binary(),
-          heading: bitstring(),
+          priority: non_neg_integer(),
+          heading: Kitt.Types.angle(),
           extent: extent(),
           regional: [map()]
         }
+
+  @type event_flag ::
+          :eventHazardLights
+          | :eventStopLineViolation
+          | :eventABSactivated
+          | :eventTractionControlLoss
+          | :eventStabilityControlactivated
+          | :eventHazardousMaterials
+          | :eventReserved1
+          | :eventHardBraking
+          | :eventLightsChanged
+          | :eventWipersChanged
+          | :eventFlatTire
+          | :eventDisabledVehicle
+          | :eventAirBagDeployment
+
+  @type angle ::
+          :"from000-0to022-5degrees"
+          | :"from022-5to045-0degrees"
+          | :"from045-0to067-5degrees"
+          | :"from067-5to090-0degrees"
+          | :"from090-0to112-5degrees"
+          | :"from112-5to135-0degrees"
+          | :"from135-0to157-5degrees"
+          | :"from157-5to180-0degrees"
+          | :"from180-0to202-5degrees"
+          | :"from202-5to225-0degrees"
+          | :"from225-0to247-5degrees"
+          | :"from247-5to270-0degrees"
+          | :"from270-0to292-5degrees"
+          | :"from292-5to315-0degrees"
+          | :"from315-0to337-5degrees"
+          | :"from337-5to360-0degrees"
 
   @type regional_extension :: map()
 
@@ -336,9 +381,19 @@ defmodule Kitt.Types do
 
   @type path_history :: %{
           initialPosition: full_position_vector(),
-          currGNSSstatus: binary(),
+          currGNSSstatus: status(),
           crumbData: [path_history_point()]
         }
+
+  @type status ::
+          :unavailable
+          | :isHealthy
+          | :isMonitored
+          | :baseStationType
+          | :aPDOPofUnder5
+          | :inViewOfUnder5
+          | :localCorrectionsPresent
+          | :networkCorrectionsPresent
 
   @type antenna_offset_set :: %{
           antOffsetX: integer(),
@@ -347,13 +402,13 @@ defmodule Kitt.Types do
         }
 
   @type rtcm_header :: %{
-          status: bitstring(),
+          status: status(),
           offsetSet: antenna_offset_set()
         }
 
   @type rtcm_package :: %{
           rtcmHeader: rtcm_header(),
-          msgs: [binary()]
+          msgs: [non_neg_integer()]
         }
 
   @type speed_profile :: %{
@@ -371,8 +426,18 @@ defmodule Kitt.Types do
           description: non_neg_integer(),
           locationDetails: generic_locations(),
           dateTime: d_date_time(),
-          vertEvent: bitstring()
+          vertEvent: vert_event()
         }
+
+  @type vert_event ::
+          :notEquipped
+          | quadrant()
+
+  @type quadrant ::
+          :leftFront
+          | :leftRear
+          | :rightFront
+          | :rightRear
 
   @type wiper_status ::
           :unavailable
@@ -720,10 +785,9 @@ defmodule Kitt.Types do
           id: non_neg_integer()
         }
 
-  @type vehicle_id :: %{
-          entityID: binary(),
-          stationID: non_neg_integer()
-        }
+  @type vehicle_id ::
+          {:entityID, non_neg_integer()}
+          | {:stationID, non_neg_integer()}
 
   @type requestor_type :: %{
           role: basic_vehicle_role(),
@@ -766,11 +830,10 @@ defmodule Kitt.Types do
           regional: [map()]
         }
 
-  @type intersection_access_point :: %{
-          lane: non_neg_integer(),
-          approach: non_neg_integer(),
-          connection: non_neg_integer()
-        }
+  @type intersection_access_point ::
+          {:lane, non_neg_integer()}
+          | {:approach, non_neg_integer()}
+          | {:connection, non_neg_integer()}
 
   @type speed_limit_type ::
           :unknown

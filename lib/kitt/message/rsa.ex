@@ -14,11 +14,11 @@ defmodule Kitt.Message.RSA do
           timeStamp: Kitt.Types.minute_of_year(),
           typeEvent: non_neg_integer(),
           description: [non_neg_integer()],
-          priority: binary(),
-          heading: bitstring(),
+          priority: non_neg_integer(),
+          heading: Kitt.Types.angle(),
           extent: Kitt.Types.extent(),
           position: Kitt.Types.full_position_vector(),
-          furtherInfoID: binary(),
+          furtherInfoID: non_neg_integer(),
           regional: [Kitt.Types.regional_extension()]
         }
 

@@ -12,9 +12,9 @@ defmodule Kitt.Message.PSM do
   @type t :: %__MODULE__{
           accelSet: Kitt.Types.acceleration_set_4_way(),
           accuracy: Kitt.Types.positional_accuracy(),
-          activityType: bitstring(),
-          activitySubType: bitstring(),
-          assistType: bitstring(),
+          activityType: activity(),
+          activitySubType: sub_activity(),
+          assistType: assistance(),
           attachment:
             :unavailable
             | :stroller
@@ -47,7 +47,7 @@ defmodule Kitt.Message.PSM do
             | :otherPersonnel
             | {:asn1_enum, non_neg_integer()},
           heading: non_neg_integer(),
-          id: binary(),
+          id: non_neg_integer(),
           msgCnt: non_neg_integer(),
           pathHistory: Kitt.Types.path_history(),
           pathPrediction: Kitt.Types.path_prediction(),
@@ -65,10 +65,53 @@ defmodule Kitt.Message.PSM do
                | :selfBalancingDevice},
           regional: [Kitt.Types.regional_extension()],
           secMark: non_neg_integer(),
-          sizing: bitstring(),
+          sizing: sizing(),
           speed: non_neg_integer(),
-          useState: bitstring()
+          useState: use_state()
         }
+
+  @type activity ::
+          :unavailable
+          | :workingOnRoad
+          | :settingUpClosures
+          | :respondingToEvents
+          | :directingTraffic
+          | :otherActivities
+
+  @type sub_activity ::
+          :unavailable
+          | :policeAndTrafficOfficers
+          | :trafficControlPersons
+          | :railroadCrossingGuards
+          | :civilDefenseNationalGuardMilitaryPolice
+          | :emergencyOrganizationPersonnel
+          | :highwayServiceVehiclePersonnel
+
+  @type assistance ::
+          :unavailable
+          | :otherType
+          | :vision
+          | :hearing
+          | :movement
+          | :cognitition
+
+  @type sizing ::
+          :unavailable
+          | :smallStature
+          | :largeStature
+          | :erraticMoving
+          | :slowMoving
+
+  @type use_state ::
+          :unavailable
+          | :other
+          | :idle
+          | :listeningToAudio
+          | :typing
+          | :calling
+          | :playingGames
+          | :reading
+          | :viewing
 
   @derive Jason.Encoder
   @enforce_keys [:accuracy, :basicType, :heading, :id, :msgCnt, :position, :secMark, :speed]

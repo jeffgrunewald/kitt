@@ -16,7 +16,7 @@ defmodule Kitt.Message.BSM do
     @typedoc "Defines the structure of a BSMCoreData data element and the data elements comprising its fields"
     @type t :: %__MODULE__{
             msgCnt: non_neg_integer(),
-            id: binary(),
+            id: non_neg_integer(),
             secMark: non_neg_integer(),
             lat: integer(),
             long: integer(),
@@ -85,11 +85,22 @@ defmodule Kitt.Message.BSM do
         }
 
   @type vehicle_safety_extensions :: %{
-          events: bitstring(),
+          events: Kitt.Types.event_flag(),
           pathHistory: Kitt.Types.path_history(),
           pathPrediction: Kitt.Types.path_prediction(),
-          lights: bitstring()
+          lights: lights_state()
         }
+
+  @type lights_state ::
+          :lowBeamHeadlightsOn
+          | :highBeamHeadlightsOn
+          | :leftTurnSignalOn
+          | :rightTurnSignalOn
+          | :hazardSignalOn
+          | :automaticLightControlOn
+          | :daytimeRunningLightsOn
+          | :fogLightOn
+          | :parkingLightsOn
 
   @type special_vehicle_extensions :: %{
           vehicleAlerts: Kitt.Types.emergency_details(),

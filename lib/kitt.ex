@@ -112,7 +112,7 @@ defmodule Kitt do
        %Kitt.Message.SRM{
          regional: nil,
          requestor: %{
-           id: {:entityID, <<0, 0, 2, 89>>},
+           id: {:entityID, 601},
            position: %{
              heading: 4800,
              position: %{elevation: 1260, lat: 374230638, long: -1221420467},
@@ -150,7 +150,7 @@ defmodule Kitt do
       %Kitt.Message.SRM{
         regional: nil,
         requestor: %{
-          id: {:entityID, <<0, 0, 2, 89>>},
+          id: {:entityID, 601},
           position: %{
             heading: 4800,
             position: %{elevation: 1260, lat: 374230638, long: -1221420467},

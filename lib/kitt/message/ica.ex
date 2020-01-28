@@ -13,14 +13,14 @@ defmodule Kitt.Message.ICA do
   @typedoc "Defines the structure of an IntersectionCollision message and the data elements comprising its fields"
   @type t :: %__MODULE__{
           msgCnt: non_neg_integer(),
-          id: binary(),
+          id: non_neg_integer(),
           timeStamp: Kitt.Types.minute_of_year(),
           partOne: CoreData.t(),
           path: Kitt.Types.path_history(),
           pathPrediction: Kitt.Types.path_prediction(),
           intersectionID: Kitt.Types.intersection_reference_id(),
           laneNumber: approach_or_lane(),
-          eventFlag: bitstring(),
+          eventFlag: Kitt.Types.event_flag(),
           regional: [Kitt.Types.regional_extension()]
         }
 

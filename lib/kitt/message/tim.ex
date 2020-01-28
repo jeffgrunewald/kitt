@@ -11,7 +11,7 @@ defmodule Kitt.Message.TIM do
   @type t :: %__MODULE__{
           msgCnt: non_neg_integer(),
           timeStamp: Kitt.Types.minute_of_year(),
-          packetID: binary(),
+          packetID: non_neg_integer(),
           urlB: String.t(),
           dataFrames: [traveler_data_frame()],
           regional: [Kitt.Types.regional_extension()]
@@ -37,14 +37,13 @@ defmodule Kitt.Message.TIM do
           url: String.t()
         }
 
-  @type msg_id :: %{
-          furtherInfoID: binary(),
-          roadSignID: road_sign_id()
-        }
+  @type msg_id ::
+          {:furtherInfoID, non_neg_integer()}
+          | {:roadSignID, road_sign_id()}
 
   @type road_sign_id :: %{
           position: Kitt.Types.position_3d(),
-          viewAngle: bitstring(),
+          viewAngle: Kitt.Types.angle(),
           mutcdCode:
             :none
             | :regulatory
@@ -53,7 +52,7 @@ defmodule Kitt.Message.TIM do
             | :motoristService
             | :guide
             | :rec,
-          crc: binary()
+          crc: non_neg_integer()
         }
 
   @type geographical_path :: %{
@@ -63,7 +62,7 @@ defmodule Kitt.Message.TIM do
           laneWidth: non_neg_integer(),
           directionality: direction_of_use(),
           closedPath: boolean(),
-          direction: bitstring(),
+          direction: Kitt.Types.angle(),
           description: description(),
           regional: [Kitt.Types.regional_extension()]
         }
@@ -81,7 +80,7 @@ defmodule Kitt.Message.TIM do
           | {:regional, [Kitt.Types.regional_extension()]}
 
   @type valid_region :: %{
-          direction: bitstring(),
+          direction: Kitt.Types.angle(),
           extent: Kitt.Types.extent(),
           area: area()
         }
@@ -110,7 +109,7 @@ defmodule Kitt.Message.TIM do
         }
 
   @type geometric_projection :: %{
-          direction: bitstring(),
+          direction: Kitt.Types.angle(),
           extent: Kitt.Types.extent(),
           laneWidth: non_neg_integer(),
           circle: circle(),
@@ -131,18 +130,16 @@ defmodule Kitt.Message.TIM do
             | :mile
         }
 
-  @type content :: %{
-          advisory: [itis_item()],
-          workZone: itis_item(),
-          genericSign: itis_item(),
-          speedLimit: itis_item(),
-          exitService: itis_item()
-        }
+  @type content ::
+          {:advisory, [itis_item()]}
+          | {:workZone, itis_item()}
+          | {:genericSign, itis_item()}
+          | {:speedLimit, itis_item()}
+          | {:exitService, itis_item()}
 
-  @type itis_item :: %{
-          itis: non_neg_integer(),
-          text: String.t()
-        }
+  @type itis_item ::
+          {:itis, non_neg_integer()}
+          | {:text, String.t()}
 
   @derive Jason.Encoder
   @enforce_keys [:msgCnt, :dataFrames]
