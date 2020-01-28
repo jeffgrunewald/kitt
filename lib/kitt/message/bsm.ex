@@ -85,11 +85,22 @@ defmodule Kitt.Message.BSM do
         }
 
   @type vehicle_safety_extensions :: %{
-          events: atom(),
+          events: Kitt.Types.event_flag(),
           pathHistory: Kitt.Types.path_history(),
           pathPrediction: Kitt.Types.path_prediction(),
-          lights: atom()
+          lights: lights_state()
         }
+
+  @type lights_state ::
+          :lowBeamHeadlightsOn
+          | :highBeamHeadlightsOn
+          | :leftTurnSignalOn
+          | :rightTurnSignalOn
+          | :hazardSignalOn
+          | :automaticLightControlOn
+          | :daytimeRunningLightsOn
+          | :fogLightOn
+          | :parkingLightsOn
 
   @type special_vehicle_extensions :: %{
           vehicleAlerts: Kitt.Types.emergency_details(),

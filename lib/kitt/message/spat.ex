@@ -20,7 +20,7 @@ defmodule Kitt.Message.SPAT do
           name: String.t(),
           id: Kitt.Types.intersection_reference_id(),
           revision: non_neg_integer(),
-          status: atom(),
+          status: status(),
           moy: Kitt.Types.minute_of_year(),
           timeStamp: non_neg_integer(),
           enabledLanes: [non_neg_integer()],
@@ -28,6 +28,22 @@ defmodule Kitt.Message.SPAT do
           maneuverAssistList: [connection_maneuver_assist()],
           regional: [Kitt.Types.regional_extension()]
         }
+
+  @type status ::
+          :manualControlIsEnabled
+          | :stopTimeIsActivated
+          | :failureFlash
+          | :preemptIsActive
+          | :signalPriorityIsActive
+          | :fixedTimeOperation
+          | :trafficDependentOperation
+          | :standbyOperation
+          | :failureMode
+          | :off
+          | :recentMAPmessageUpdate
+          | :recentChangeInMAPassignedLanesIDsUsed
+          | :noValidMAPisAvailableAtThisTime
+          | :noValidSPATisAvailableAtThisTime
 
   @type movement_state :: %{
           movementName: String.t(),

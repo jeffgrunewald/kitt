@@ -15,7 +15,7 @@ defmodule Kitt.Message.RSA do
           typeEvent: non_neg_integer(),
           description: [non_neg_integer()],
           priority: non_neg_integer(),
-          heading: atom(),
+          heading: Kitt.Types.angle(),
           extent: Kitt.Types.extent(),
           position: Kitt.Types.full_position_vector(),
           furtherInfoID: non_neg_integer(),

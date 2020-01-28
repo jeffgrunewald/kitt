@@ -43,7 +43,7 @@ defmodule Kitt.Message.TIM do
 
   @type road_sign_id :: %{
           position: Kitt.Types.position_3d(),
-          viewAngle: atom(),
+          viewAngle: Kitt.Types.angle(),
           mutcdCode:
             :none
             | :regulatory
@@ -62,7 +62,7 @@ defmodule Kitt.Message.TIM do
           laneWidth: non_neg_integer(),
           directionality: direction_of_use(),
           closedPath: boolean(),
-          direction: atom(),
+          direction: Kitt.Types.angle(),
           description: description(),
           regional: [Kitt.Types.regional_extension()]
         }
@@ -80,7 +80,7 @@ defmodule Kitt.Message.TIM do
           | {:regional, [Kitt.Types.regional_extension()]}
 
   @type valid_region :: %{
-          direction: atom(),
+          direction: Kitt.Types.angle(),
           extent: Kitt.Types.extent(),
           area: area()
         }
@@ -109,7 +109,7 @@ defmodule Kitt.Message.TIM do
         }
 
   @type geometric_projection :: %{
-          direction: atom(),
+          direction: Kitt.Types.angle(),
           extent: Kitt.Types.extent(),
           laneWidth: non_neg_integer(),
           circle: circle(),

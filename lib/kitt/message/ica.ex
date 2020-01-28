@@ -20,7 +20,7 @@ defmodule Kitt.Message.ICA do
           pathPrediction: Kitt.Types.path_prediction(),
           intersectionID: Kitt.Types.intersection_reference_id(),
           laneNumber: approach_or_lane(),
-          eventFlag: atom(),
+          eventFlag: Kitt.Types.event_flag(),
           regional: [Kitt.Types.regional_extension()]
         }
 

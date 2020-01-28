@@ -22,7 +22,7 @@ defmodule Kitt.Types do
           yaw: integer()
         }
   @type brake_system_status :: %{
-          wheelBrakes: atom(),
+          wheelBrakes: wheel_brake(),
           traction:
             :unavailable
             | :off
@@ -48,6 +48,10 @@ defmodule Kitt.Types do
             | :on
             | :reserved
         }
+
+  @type wheel_brake ::
+          :unavailable
+          | quadrant()
 
   @type vehicle_size :: %{
           width: non_neg_integer(),
@@ -97,8 +101,16 @@ defmodule Kitt.Types do
 
   @type privileged_events :: %{
           sspRights: non_neg_integer(),
-          event: atom()
+          event: privileged_event_flag()
         }
+
+  @type privileged_event_flag ::
+          :peUnavailable
+          | :peEmergencyResponse
+          | :peEmergencyLightsActive
+          | :peEmergencySoundActive
+          | :peNonEmergencyLightsActive
+          | :peNonEmergencySoundActive
 
   @type emergency_details :: %{
           sspRights: non_neg_integer(),
@@ -138,10 +150,43 @@ defmodule Kitt.Types do
           typeEvent: non_neg_integer(),
           description: [non_neg_integer()],
           priority: non_neg_integer(),
-          heading: atom(),
+          heading: Kitt.Types.angle(),
           extent: extent(),
           regional: [map()]
         }
+
+  @type event_flag ::
+          :eventHazardLights
+          | :eventStopLineViolation
+          | :eventABSactivated
+          | :eventTractionControlLoss
+          | :eventStabilityControlactivated
+          | :eventHazardousMaterials
+          | :eventReserved1
+          | :eventHardBraking
+          | :eventLightsChanged
+          | :eventWipersChanged
+          | :eventFlatTire
+          | :eventDisabledVehicle
+          | :eventAirBagDeployment
+
+  @type angle ::
+          :"from000-0to022-5degrees"
+          | :"from022-5to045-0degrees"
+          | :"from045-0to067-5degrees"
+          | :"from067-5to090-0degrees"
+          | :"from090-0to112-5degrees"
+          | :"from112-5to135-0degrees"
+          | :"from135-0to157-5degrees"
+          | :"from157-5to180-0degrees"
+          | :"from180-0to202-5degrees"
+          | :"from202-5to225-0degrees"
+          | :"from225-0to247-5degrees"
+          | :"from247-5to270-0degrees"
+          | :"from270-0to292-5degrees"
+          | :"from292-5to315-0degrees"
+          | :"from315-0to337-5degrees"
+          | :"from337-5to360-0degrees"
 
   @type regional_extension :: map()
 
@@ -336,9 +381,19 @@ defmodule Kitt.Types do
 
   @type path_history :: %{
           initialPosition: full_position_vector(),
-          currGNSSstatus: atom(),
+          currGNSSstatus: status(),
           crumbData: [path_history_point()]
         }
+
+  @type status ::
+          :unavailable
+          | :isHealthy
+          | :isMonitored
+          | :baseStationType
+          | :aPDOPofUnder5
+          | :inViewOfUnder5
+          | :localCorrectionsPresent
+          | :networkCorrectionsPresent
 
   @type antenna_offset_set :: %{
           antOffsetX: integer(),
@@ -347,7 +402,7 @@ defmodule Kitt.Types do
         }
 
   @type rtcm_header :: %{
-          status: atom(),
+          status: status(),
           offsetSet: antenna_offset_set()
         }
 
@@ -371,8 +426,18 @@ defmodule Kitt.Types do
           description: non_neg_integer(),
           locationDetails: generic_locations(),
           dateTime: d_date_time(),
-          vertEvent: atom()
+          vertEvent: vert_event()
         }
+
+  @type vert_event ::
+          :notEquipped
+          | quadrant()
+
+  @type quadrant ::
+          :leftFront
+          | :leftRear
+          | :rightFront
+          | :rightRear
 
   @type wiper_status ::
           :unavailable

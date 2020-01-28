@@ -93,12 +93,26 @@ defmodule Kitt.Message.MAP do
           ingressApproach: non_neg_integer(),
           egressApproach: non_neg_integer(),
           laneAttributes: lane_attributes(),
-          maneuvers: atom(),
+          maneuvers: maneuver(),
           nodeList: Kitt.Types.node_list_xy(),
           connectsTo: [connection()],
           overlays: [non_neg_integer()],
           regional: [Kitt.Types.regional_extension()]
         }
+
+  @type maneuver ::
+          :maneuverStraightAllowed
+          | :maneuverLeftAllowed
+          | :maneuverRightAllowed
+          | :maneuverUTurnAllowed
+          | :maneuverLeftTurnOnRedAllowed
+          | :maneuverRightTurnOnRedAllowed
+          | :maneuverLaneChangeAllowed
+          | :maneuverNoStoppingAllowed
+          | :yieldAllwaysRequired
+          | :goWithHalt
+          | :caution
+          | :reserved1
 
   @type connection :: %{
           connectingLane: connecting_lane(),
@@ -110,25 +124,113 @@ defmodule Kitt.Message.MAP do
 
   @type connecting_lane :: %{
           lane: non_neg_integer(),
-          maneuver: atom()
+          maneuver: maneuver()
         }
 
   @type lane_attributes :: %{
-          directionalUse: atom(),
-          sharedWith: atom(),
+          directionalUse: directional_use(),
+          sharedWith: shared_with(),
           laneType: lane_attribute_type(),
           regional: [Kitt.Types.regional_extension()]
         }
 
+  @type directional_use ::
+          :ingressPath
+          | :egressPath
+
+  @type shared_with ::
+          :overlappingLaneDescriptionProvided
+          | :multipleLanesTreatedAsOneLane
+          | :otherNonMotorizedTrafficTypes
+          | :individualMotorizedVehicleTraffic
+          | :busVehicleTraffic
+          | :taxiVehicleTraffic
+          | :pedestriansTraffic
+          | :cyclistVehicleTraffic
+          | :trackedVehicleTraffic
+          | :pedestrianTraffic
+
   @type lane_attribute_type ::
-          {:vehicle, atom()}
-          | {:crosswalk, atom()}
-          | {:bikeLane, atom()}
-          | {:sidewalk, atom()}
-          | {:median, atom()}
-          | {:striping, atom()}
-          | {:trackedVehicle, atom()}
-          | {:parking, atom()}
+          {:vehicle, vehicle_lane_attribute()}
+          | {:crosswalk, crosswalk_lane_attribute()}
+          | {:bikeLane, bike_lane_attribute()}
+          | {:sidewalk, sidewalk_lane_attribute()}
+          | {:median, median_lane_attribute()}
+          | {:striping, striping_lane_attribute()}
+          | {:trackedVehicle, tracked_vehicle_attribute()}
+          | {:parking, parking_lane_attribute()}
+
+  @type vehicle_lane_attribute ::
+          :isVehicleRevocableLane
+          | :isVehicleFlyOverLane
+          | :hovLaneUseOnly
+          | :restrictedToBusUse
+          | :restrictedToTaxiUse
+          | :restrictedFromPublicUse
+          | :hasIRbeaconCoverage
+          | :permissionOnRequest
+
+  @type crosswalk_lane_attribute ::
+          :crosswalkRevocableLane
+          | :bicyleUseAllowed
+          | :isXwalkFlyOverLane
+          | :fixedCycleTime
+          | :biDirectionalCycleTimes
+          | :hasPushToWalkButton
+          | :audioSupport
+          | :rfSignalRequestPresent
+          | :unsignalizedSegmentsPresent
+
+  @type bike_lane_attribute ::
+          :bikeRevocableLane
+          | :pedestrianUseAllowed
+          | :isBikeFlyOverLane
+          | :fixedCycleTime
+          | :biDirectionalCycleTimes
+          | :isolatedByBarrier
+          | :unsignalizedSegmentsPresent
+
+  @type sidewalk_lane_attribute ::
+          :"sidewalk-RevocableLane"
+          | :bicyleUseAllowed
+          | :isSidewalkFlyOverLane
+          | :walkBikes
+
+  @type median_lane_attribute ::
+          :"median-RevocableLane"
+          | :median
+          | :whiteLineHashing
+          | :stripedLines
+          | :doubleStripedLines
+          | :trafficCones
+          | :constructionBarrier
+          | :trafficChannels
+          | :lowCurbs
+          | :highCurbs
+
+  @type striping_lane_attribute ::
+          :stripeToConnectingLanesRevocableLane
+          | :stripeDrawOnLeft
+          | :stripeDrawOnRight
+          | :stripeToConnectingLanesLeft
+          | :stripeToConnectingLanesRight
+          | :stripeToConnectingLanesAhead
+
+  @type tracked_vehicle_attribute ::
+          :"spec-RevocableLane"
+          | :"spec-commuterRailRoadTrack"
+          | :"spec-lightRailRoadTrack"
+          | :"spec-heavyRailRoadTrack"
+          | :"spec-otherRailType"
+
+  @type parking_lane_attribute ::
+          :parkingRevocableLane
+          | :parallelParkingInUse
+          | :headInParkingInUse
+          | :doNotParkZone
+          | :parkingForBusUse
+          | :parkingForTaxiUse
+          | :noPublicParkingUse
 
   @derive Jason.Encoder
   @enforce_keys [:msgIssueRevision]

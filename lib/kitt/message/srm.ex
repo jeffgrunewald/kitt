@@ -45,7 +45,7 @@ defmodule Kitt.Message.SRM do
           position: requestor_position_vector(),
           name: String.t(),
           routeName: String.t(),
-          transitStatus: atom(),
+          transitStatus: transit_status(),
           transitOccupancy:
             :occupancyUnknown
             | :occupancyEmpty
@@ -58,6 +58,14 @@ defmodule Kitt.Message.SRM do
           transitSchedule: integer(),
           regional: [Kitt.Types.regional_extension()]
         }
+
+  @type transit_status ::
+          :none
+          | :anADAuse
+          | :aBikeLoad
+          | :doorOpen
+          | :occM
+          | :occL
 
   @type requestor_position_vector :: %{
           position: Kitt.Types.position_3d(),
