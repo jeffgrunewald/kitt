@@ -1,6 +1,8 @@
 defmodule Kitt.MixProject do
   use Mix.Project
 
+  @github "https://github.com/jeffgrunewald/kitt"
+
   def project() do
     [
       app: :kitt,
@@ -11,7 +13,8 @@ defmodule Kitt.MixProject do
       docs: docs(),
       package: package(),
       description: description(),
-      source_url: "https://github.com/jeffgrunewald/kitt",
+      homepage_url: @github,
+      source_url: @github,
       dialyzer: [plt_file: {:no_warn, ".dialyzer/#{System.version()}.plt"}]
     ]
   end
@@ -36,17 +39,15 @@ defmodule Kitt.MixProject do
     [
       maintainers: ["jeffgrunewald"],
       licenses: ["Apache 2.0"],
-      links: %{:GitHub => "https://github.com/jeffgrunewald/kitt"}
+      links: %{"GitHub" => @github}
     ]
   end
 
   defp docs() do
     [
-      main: "readme",
-      source_url: "https://github.com/jeffgrunewald/kitt",
-      extras: [
-        "README.md"
-      ]
+      source_url: @github,
+      extras: ["README.md"],
+      source_url_pattern: "#{@github}/blob/master/%{path}#L%{line}"
     ]
   end
 end
