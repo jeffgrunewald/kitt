@@ -12,8 +12,8 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-elixir@v1.2.0
         with:
-          otp-version: 22.2
-          elixir-version: 1.9.4
+          otp-version: 21.3
+          elixir-version: 1.8.2
       - name: Get dependencies
         run: |
           mix local.rebar --force
@@ -29,13 +29,17 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-elixir@v1.2.0
         with:
-          otp-version: 22.2
-          elixir-version: 1.9.4
+          otp-version: 21.3
+          elixir-version: 1.8.2
       - name: Retrieve cached PLT
         uses: actions/cache@v1
         with:
           path: .dialyzer
-          key: dialyzer-plt
+          key: plt-${{ github.head_ref }}
+          restore-keys: |
+            plt-${{ github.base_ref }}
+            plt-master
+            plt-
       - name: Get dependencies
         run: |
           mix local.rebar --force
