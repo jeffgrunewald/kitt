@@ -2,17 +2,17 @@ name: Master
 on:
   push:
     branches:
-      - master
+      - main
 jobs:
   dialyzer:
     name: Cache PLT
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-elixir@v1.2.0
+      - uses: erlef/setup-beam@v1
         with:
-          otp-version: 21.3
-          elixir-version: 1.8.2
+          otp-version: 23.2
+          elixir-version: 1.11
       - name: Get dependencies
         run: |
           mix local.rebar --force
@@ -22,7 +22,7 @@ jobs:
         uses: actions/cache@v1
         with:
           path: .dialyzer
-          key: plt-master
+          key: plt-main
       - name: Run dialyzer
         run: |
           mix dialyzer
