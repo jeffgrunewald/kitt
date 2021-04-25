@@ -6,7 +6,7 @@ defmodule Kitt.MixProject do
   def project() do
     [
       app: :kitt,
-      version: "0.3.0",
+      version: "0.4.0",
       elixir: "~> 1.8",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
@@ -27,9 +27,9 @@ defmodule Kitt.MixProject do
 
   defp deps() do
     [
-      {:dialyxir, "~> 1.0.0-rc.7", only: [:dev], runtime: false},
-      {:ex_doc, "~> 0.21.0", only: :dev},
-      {:jason, "~> 1.1"}
+      {:dialyxir, "~> 1.1", only: [:dev], runtime: false},
+      {:ex_doc, "~> 0.24", only: :dev},
+      {:jason, "~> 1.2"}
     ]
   end
 
